@@ -2,14 +2,11 @@ package com.scascanner.studycafe.login.repository;
 
 import com.scascanner.studycafe.domain.User;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.List;
 
-@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class UserRepository {
