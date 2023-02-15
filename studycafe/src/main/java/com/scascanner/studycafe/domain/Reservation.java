@@ -18,6 +18,7 @@ import java.time.LocalTime;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Reservation {
 
     @Id
