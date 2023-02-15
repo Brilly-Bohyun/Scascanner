@@ -1,4 +1,4 @@
-package com.scascanner.studycafe.login.controller;
+package com.scascanner.studycafe.login.dto;
 
 import lombok.Getter;
 import lombok.Setter;
