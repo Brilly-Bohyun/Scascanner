@@ -3,6 +3,7 @@ package com.scascanner.studycafe.login.service;
 import com.scascanner.studycafe.domain.User;
 import com.scascanner.studycafe.login.dto.UserForm;
 import com.scascanner.studycafe.login.repository.UserRepository;
+import com.scascanner.studycafe.login.repository.UserRepositoryOld;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,6 @@ public class UserService {
     }
 
     public User findOneUser(Long userId){
-        return userRepository.findOne(userId);
+        return userRepository.findById(userId).get();
     }
 }
