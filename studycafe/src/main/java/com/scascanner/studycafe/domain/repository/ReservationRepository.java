@@ -1,6 +1,6 @@
-package com.scascanner.studycafe.repository;
+package com.scascanner.studycafe.domain.repository;
 
-import com.scascanner.studycafe.domain.entity.Reservation;
+import com.scascanner.studycafe.domain.entity.reservation.Reservation;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
