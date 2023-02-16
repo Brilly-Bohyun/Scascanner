@@ -1,9 +1,10 @@
-package com.scascanner.studycafe.web.service;
+package com.scascanner.studycafe.web.reservation.service;
 
 import com.scascanner.studycafe.domain.entity.reservation.Reservation;
 import com.scascanner.studycafe.domain.repository.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,6 +14,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ReservationService {
 
