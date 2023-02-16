@@ -1,6 +1,6 @@
 package com.scascanner.studycafe.repository;
 
-import com.scascanner.studycafe.domain.Reservation;
+import com.scascanner.studycafe.domain.entity.Reservation;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -23,4 +23,5 @@ public class ReservationRepository {
     public void reserve(Reservation reservation) {
         em.persist(reservation);
     }
+
 }

@@ -1,5 +1,9 @@
-package com.scascanner.studycafe.domain;
+package com.scascanner.studycafe.domain.entity.reservation;
 
+import com.scascanner.studycafe.domain.entity.Room;
+import com.scascanner.studycafe.domain.entity.StudyCafe;
+import com.scascanner.studycafe.domain.entity.User;
+import com.scascanner.studycafe.domain.entity.reservation.ReservationStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

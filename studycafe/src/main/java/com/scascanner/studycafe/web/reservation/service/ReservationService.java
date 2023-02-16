@@ -1,7 +1,7 @@
-package com.scascanner.studycafe.service;
+package com.scascanner.studycafe.web.service;
 
-import com.scascanner.studycafe.domain.Reservation;
-import com.scascanner.studycafe.repository.ReservationRepository;
+import com.scascanner.studycafe.domain.entity.reservation.Reservation;
+import com.scascanner.studycafe.domain.repository.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -37,4 +37,5 @@ public class ReservationService {
     public void reserve(Reservation reservation) {
         reservationRepository.reserve(reservation);
     }
+
 }
