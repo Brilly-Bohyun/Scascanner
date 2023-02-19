@@ -1,4 +1,4 @@
-package com.scascanner.studycafe.domain;
+package com.scascanner.studycafe.domain.entity;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -11,19 +11,19 @@ import java.time.LocalDate;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Owner {
+public class User {
 
-    @Id
-    @GeneratedValue
-    @Column(name = "owner_id")
+    @Id @GeneratedValue
+    @Column(name = "user_id")
     private Long id;
 
     private String email;
-
     private String password;
-
     private String nickname;
-
     private String name;
     private LocalDate birthday;
+
+    public Long getId() {
+        return id;
+    }
 }

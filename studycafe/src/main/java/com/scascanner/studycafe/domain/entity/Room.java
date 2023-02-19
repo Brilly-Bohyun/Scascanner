@@ -1,4 +1,4 @@
-package com.scascanner.studycafe.domain;
+package com.scascanner.studycafe.domain.entity;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -10,27 +10,24 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import java.time.LocalTime;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class StudyCafe {
+public class Room {
 
     @Id
     @GeneratedValue
-    @Column(name = "study_cafe_id")
+    @Column(name = "room_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id")
-    private Owner owner;
+    @JoinColumn(name = "study_cafe_id")
+    private StudyCafe studyCafe;
 
-    private String name;
-    private Integer minUsingTime;
-    private LocalTime openTime;
-    private LocalTime closeTime;
-    private String address;
-    private String comment;
+    private Integer headCount;
+    private Integer price;
 
-
+    public Long getId() {
+        return id;
+    }
 }
