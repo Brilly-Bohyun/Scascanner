@@ -30,6 +30,12 @@ public class RoomRepository {
         return em.find(Room.class, roomId);
     }
 
+    public List<Room> findByStudyCafeId(Long cafeId) {
+        return em.createQuery("select r from Room r where r.studyCafe.id = :cafeId", Room.class)
+                .setParameter("cafeId", cafeId)
+                .getResultList();
+    }
+
     public List<Room> findAll() {
         return em.createQuery("select r from Room r", Room.class).getResultList();
     }
