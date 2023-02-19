@@ -26,11 +26,24 @@ public class RoomRepository {
         }
     }
 
-    public Room findById(Long roomId) {
+    /**
+     * 룸 정보 수정 시 해당 룸 엔티티를 찾기 위한 메소드
+     * 꼭 스터디카페 내에서 조회하는 경우에만 룸 엔티티를 DB에서 조회하지 않는다는 것을 주의
+     * @param roomId
+     * @return
+     */
+    public Room findOne(Long roomId) {
         return em.find(Room.class, roomId);
     }
 
-    public List<Room> findByStudyCafeId(Long cafeId) {
+    public Room findOneByStudyCafeId(Long cafeId, Long roomId) {
+        return em.createQuery("select r from Room r where r.studyCafe.id =: cafeId and r.id =: roomId", Room.class)
+                .setParameter("cafeId", cafeId)
+                .setParameter("roomId", roomId)
+                .getSingleResult();
+    }
+
+    public List<Room> findAllByStudyCafeId(Long cafeId) {
         return em.createQuery("select r from Room r where r.studyCafe.id = :cafeId", Room.class)
                 .setParameter("cafeId", cafeId)
                 .getResultList();
