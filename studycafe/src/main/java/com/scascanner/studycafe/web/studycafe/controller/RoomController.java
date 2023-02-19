@@ -1,26 +1,16 @@
 package com.scascanner.studycafe.web.studycafe.controller;
 
-import com.scascanner.studycafe.domain.entity.Room;
-import com.scascanner.studycafe.domain.entity.StudyCafe;
 import com.scascanner.studycafe.web.studycafe.dto.RoomDto;
+import com.scascanner.studycafe.web.studycafe.dto.RoomEditDto;
 import com.scascanner.studycafe.web.studycafe.service.RoomService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import org.hibernate.validator.constraints.Range;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Positive;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,13 +39,24 @@ public class RoomController {
         return rooms;
     }
 
-    @GetMapping("/studycafe/{cafeId}/room/{roomId}")
+    @GetMapping("/studycafe/{cafeId}/rooms/{roomId}")
     public RoomDto room(Model model, @PathVariable Long cafeId, @PathVariable Long roomId) {
 
         RoomDto room = RoomDto.mapToDto(roomService.findOneInStudyCafe(cafeId, roomId));
         model.addAttribute("room", room);
 
         return room;
+    }
+
+    @GetMapping("/studycafe/{cafeId}/rooms/{roomId}/edit")
+    public RoomEditDto editRoomForm(@PathVariable String cafeId, @PathVariable Long roomId, Model model) {
+
+        RoomEditDto roomEditDto = RoomEditDto.mapToDto(roomService.findOne(roomId));
+
+        model.addAttribute("form", roomEditDto);
+        return roomEditDto;
+
+        // return 뷰 논리 이름
     }
 
     /**
@@ -65,37 +66,11 @@ public class RoomController {
      * @param roomId
      * @return
      */
-    @PostMapping("/studycafe/{cafeId}/room/{roomId}/edit")
-    public RoomEditDto edit(Model model, @PathVariable Long cafeId, @PathVariable Long roomId) {
+    @PostMapping("/studycafe/{cafeId}/rooms/{roomId}/edit")
+    public void edit(@ModelAttribute("form") RoomEditDto form, Model model, @PathVariable Long cafeId, @PathVariable Long roomId) {
 
+        roomService.updateRoom(roomId, form.getHeadCount(), form.getPrice());
 
-    }
-
-    @Getter
-    @Setter
-    static class RoomEditDto {
-        private Long id;
-
-        @ManyToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "study_cafe_id")
-        private StudyCafe studyCafe;
-
-        @NotBlank(message = "인원 수는 공백일 수 없습니다.")
-        @Min(message = "인원수는 최소 1 이상이여야 합니다.", value = 1)
-        private Integer headCount;
-
-        @NotBlank(message = "가격은 공백일 수 없습니다.")
-        @Positive(message = "적절한 가격을 입력해주세요.")
-        private Integer price;
-
-        private static ModelMapper modelMapper = new ModelMapper();
-
-        public Room createEntity() {
-            return modelMapper.map(this, Room.class);
-        }
-
-        public static RoomDto mapToDto(Room room) {
-            return modelMapper.map(room, RoomDto.class);
-        }
+        // 리다이렉트 ("redirect:/studycafe/{cafeId}/rooms")
     }
 }
