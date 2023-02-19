@@ -1,5 +1,8 @@
-package com.scascanner.studycafe.domain;
+package com.scascanner.studycafe.domain.entity.reservation;
 
+import com.scascanner.studycafe.domain.entity.Room;
+import com.scascanner.studycafe.domain.entity.StudyCafe;
+import com.scascanner.studycafe.domain.entity.User;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -41,5 +44,7 @@ public class Reservation {
     @Enumerated(value = EnumType.STRING)
     private ReservationStatus reservationStatus;
 
-
+    public Long getId() {
+        return id;
+    }
 }
