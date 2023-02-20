@@ -14,9 +14,11 @@ public class ReservationRepository {
     public EntityManager em;
 
     //날짜가 주어졌을 때 예약이 안되는 시간대를 반환
-    public List<LocalDateTime[]> findAllImpossibleReservation(LocalDate targetDate) {
-        return em.createQuery("select r.startTime, r.endTime from Reservation r where r.date = :targetDate")
+    public List<LocalDateTime[]> findAllImpossibleReservation(LocalDate targetDate, Long studyCafeId, Long roomId) {
+        return em.createQuery("select r.startTime, r.endTime from Reservation r where r.date = :targetDate and r.studyCafe = :studyCafeId and r.room = :roomId")
                 .setParameter("targetDate", targetDate)
+                .setParameter("studyCafeId", studyCafeId)
+                .setParameter("roomId", roomId)
                 .getResultList();
     }
     
