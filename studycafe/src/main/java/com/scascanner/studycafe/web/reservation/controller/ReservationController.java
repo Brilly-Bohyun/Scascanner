@@ -61,6 +61,15 @@ public class ReservationController {
 
 
     /**
+     * 예약 조회 응답 DTO
+     */
+    @Builder
+    static class GetReservationResponse{
+        private Date date;
+        private ReservationTimeStatus reservationTimeStatus;
+    }
+
+    /**
      * 넘겨줄 날짜 형식
      */
     @Builder
