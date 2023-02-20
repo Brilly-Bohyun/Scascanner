@@ -1,6 +1,5 @@
 package com.scascanner.studycafe.login.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.scascanner.studycafe.domain.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,10 +15,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 public class UserForm {
-
-    @JsonIgnore
-    private Long id;
-
     @NotEmpty(message = "사용자 이메일은 필수 입니다.")
     @Email
     private String email;
