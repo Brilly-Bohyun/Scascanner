@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
@@ -23,15 +24,18 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/reservation")
 public class ReservationController {
 
     private final ReservationService reservationService;
     private final StudyCafeService studyCafeService;
 
-    @GetMapping("/reservation/{date}/{studycafeId}")//date가 20230211의 형태로 올 경우
+    @GetMapping("/{date}/{studycafeId}")//date가 2023-02-11의 형태로 올 경우
     public GetReservationResponse impossibleReservationTimeList(@PathVariable String date, @PathVariable Long studycafeId) {
         LocalDate findTargetDate = LocalDate.of(
-                Integer.parseInt(date.substring(0, 4)), Integer.parseInt(date.substring(4, 6)), Integer.parseInt(date.substring(6, 8)));
+                Integer.parseInt(date.substring(0, 4)),
+                Integer.parseInt(date.substring(4, 6)),
+                Integer.parseInt(date.substring(6, 8)));
 
         Map<String, LocalTime> studyCafeOperationTime = studyCafeService.findStudyCafeOperationTime(studycafeId);
         Map<Integer, Boolean> reservationTimeStatus = reservationService.reservationTimeStatus(findTargetDate, studyCafeOperationTime.get("openTime"), studyCafeOperationTime.get("closeTime"));
@@ -60,7 +64,7 @@ public class ReservationController {
                 .build();
     }
 
-    @PostMapping("/reservation")
+    @PostMapping
     public ResponseEntity<?> reserve(Reservation reservation) {
         reservationService.reserve(reservation);
         HttpHeaders httpHeaders = new HttpHeaders();
