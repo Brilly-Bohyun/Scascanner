@@ -67,9 +67,9 @@ public class RoomController {
      * @return
      */
     @PostMapping("/studycafe/{cafeId}/rooms/{roomId}/edit")
-    public void edit(@ModelAttribute("form") RoomEditDto form, Model model, @PathVariable Long cafeId, @PathVariable Long roomId) {
+    public void edit(@ModelAttribute RoomEditDto roomEditDto, Model model, @PathVariable Long cafeId, @PathVariable Long roomId) {
 
-        roomService.updateRoom(roomId, form.getHeadCount(), form.getPrice());
+        roomService.updateRoom(roomId, roomEditDto);
 
         // 리다이렉트 ("redirect:/studycafe/{cafeId}/rooms")
     }
