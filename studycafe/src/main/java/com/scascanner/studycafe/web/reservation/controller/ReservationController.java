@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
@@ -30,12 +31,12 @@ public class ReservationController {
     private final ReservationService reservationService;
     private final StudyCafeService studyCafeService;
 
-    @GetMapping("/{date}/{studycafeId}")//date가 2023-02-11의 형태로 올 경우
-    public GetReservationResponse impossibleReservationTimeList(@PathVariable String date, @PathVariable Long studycafeId) {
+    @GetMapping//date가 2023-02-11의 형태로 올 경우
+    public GetReservationResponse impossibleReservationTimeList(@RequestParam String date, @RequestParam Long studycafeId) {
         LocalDate findTargetDate = LocalDate.of(
                 Integer.parseInt(date.substring(0, 4)),
-                Integer.parseInt(date.substring(4, 6)),
-                Integer.parseInt(date.substring(6, 8)));
+                Integer.parseInt(date.substring(5, 7)),
+                Integer.parseInt(date.substring(8, 10)));
 
         Map<String, LocalTime> studyCafeOperationTime = studyCafeService.findStudyCafeOperationTime(studycafeId);
         Map<Integer, Boolean> reservationTimeStatus = reservationService.reservationTimeStatus(findTargetDate, studyCafeOperationTime.get("openTime"), studyCafeOperationTime.get("closeTime"));
@@ -72,6 +73,11 @@ public class ReservationController {
 
         return new ResponseEntity<>(httpHeaders, HttpStatus.MOVED_PERMANENTLY); // "/"으로 redirect , 후에 예약 상세페이지를 만들면 예약 상세 페이지로 redirect하는 것으로 변경 !
     }
+
+
+    /**
+     *
+     */
 
 
     /**
