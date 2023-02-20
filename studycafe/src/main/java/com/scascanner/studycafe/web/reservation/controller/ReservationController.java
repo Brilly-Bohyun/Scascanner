@@ -32,14 +32,16 @@ public class ReservationController {
     private final StudyCafeService studyCafeService;
 
     @GetMapping//date가 2023-02-11의 형태로 올 경우
-    public GetReservationResponse impossibleReservationTimeList(@RequestParam String date, @RequestParam Long studycafeId) {
+    public GetReservationResponse impossibleReservationTimeList(@RequestParam String date, @RequestParam Long studyCafeId, @RequestParam Long roomId) {
         LocalDate findTargetDate = LocalDate.of(
                 Integer.parseInt(date.substring(0, 4)),
                 Integer.parseInt(date.substring(5, 7)),
                 Integer.parseInt(date.substring(8, 10)));
 
-        Map<String, LocalTime> studyCafeOperationTime = studyCafeService.findStudyCafeOperationTime(studycafeId);
-        Map<Integer, Boolean> reservationTimeStatus = reservationService.reservationTimeStatus(findTargetDate, studyCafeOperationTime.get("openTime"), studyCafeOperationTime.get("closeTime"));
+        Map<String, LocalTime> studyCafeOperationTime = studyCafeService.findStudyCafeOperationTime(studyCafeId);
+        Map<Integer, Boolean> reservationTimeStatus = reservationService.reservationTimeStatus(findTargetDate, studyCafeOperationTime.get("openTime"),
+                studyCafeOperationTime.get("closeTime"),
+                studyCafeId, roomId);
 
         List<ReservationTimeStatus> reservationTimeStatusList = new ArrayList<>();
 
