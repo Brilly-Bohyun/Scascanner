@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController // 테스트용
@@ -21,15 +22,17 @@ public class StudyCafeController {
     private final StudyCafeService studyCafeService;
 
     @GetMapping("/studycafe/new")
-    public String addForm(Model model) {
-        model.addAttribute("form", new StudyCafeDto());
-        return "ok";
+    public StudyCafeDto addForm(Model model) {
+        StudyCafeDto studyCafeDto = new StudyCafeDto();
+        model.addAttribute("form", studyCafeDto);
+
+        return studyCafeDto;
 //        return "/studycafe/create";
     }
 
     @PostMapping("/studycafe/new")
     public String add(StudyCafeDto studyCafeDto) {
-        StudyCafe studyCafe = studyCafeDto.createDao();
+        StudyCafe studyCafe = studyCafeDto.createEntity();
         studyCafeService.addStudyCafe(studyCafe);
 
         return "ok";
@@ -44,23 +47,22 @@ public class StudyCafeController {
      * @return 뷰 논리 이름
      */
     @GetMapping("/studycafe")
-    public String studyCafes(Model model) {
-        List<StudyCafeDto> studyCafes = studyCafeService.findStudyCafes();
+    public List<StudyCafeDto> studyCafes(Model model) {
+        List<StudyCafeDto> studyCafes = studyCafeService.findStudyCafes().stream().map(StudyCafeDto::mapToDto).collect(Collectors.toList());
         model.addAttribute("studyCafes", studyCafes);
 
-        return "ok";
-//        return "/studycafe";
+        return studyCafes;
     }
 
     @GetMapping("/studycafe/{cafeId}")
-    public String studyCafe(@PathVariable Long cafeId, Model model) {
+    public StudyCafeDto studyCafe(@PathVariable Long cafeId, Model model) {
 
-        StudyCafeDto studyCafe = studyCafeService.findOne(cafeId);
+        StudyCafeDto studyCafe = StudyCafeDto.mapToDto(studyCafeService.findOne(cafeId));
         model.addAttribute("studycafe", studyCafe);
 
         // 뷰에서 뭔가 정보를 깔끔하게 띄어주면 좋을 것 같음
 
-        return "ok";
+        return studyCafe;
 //        return "/studycafe/" + cafeId;  // 이거 더 편하게 하는 방법이 있었는데 기억 안남...
     }
 }
