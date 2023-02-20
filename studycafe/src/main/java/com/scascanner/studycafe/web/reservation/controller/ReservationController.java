@@ -1,13 +1,19 @@
 package com.scascanner.studycafe.web.reservation.controller;
 
+import com.scascanner.studycafe.domain.entity.reservation.Reservation;
 import com.scascanner.studycafe.web.reservation.service.ReservationService;
 import com.scascanner.studycafe.web.studycafe.service.StudyCafeService;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -42,6 +48,15 @@ public class ReservationController {
 
         }
         return reservationTimeStatusList;
+    }
+
+    @PostMapping("/reservation")
+    public ResponseEntity<?> reserve(Reservation reservation) {
+        reservationService.reserve(reservation);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setLocation(URI.create("/"));
+
+        return new ResponseEntity<>(httpHeaders, HttpStatus.MOVED_PERMANENTLY); // "/"으로 redirect , 후에 예약 상세페이지를 만들면 예약 상세 페이지로 redirect하는 것으로 변경 !
     }
 
 
