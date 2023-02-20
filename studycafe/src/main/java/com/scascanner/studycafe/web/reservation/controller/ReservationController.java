@@ -61,6 +61,16 @@ public class ReservationController {
 
 
     /**
+     * 넘겨줄 날짜 형식
+     */
+    @Builder
+    static class Date{
+        private int year;
+        private int month;
+        private int day;
+    }
+
+    /**
      * 시간별 예약 가능 여부
      */
     @Builder
