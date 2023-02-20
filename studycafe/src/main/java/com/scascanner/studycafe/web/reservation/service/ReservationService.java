@@ -21,8 +21,8 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private Map<Integer, Boolean> reservationTimes = new ConcurrentHashMap<>();
 
-    public Map<Integer, Boolean> reservationTimeStatus(LocalDate targetDate, LocalTime openTime, LocalTime closeTime) {
-        List<LocalDateTime[]> allPossibleReservation = reservationRepository.findAllImpossibleReservation(targetDate);
+    public Map<Integer, Boolean> reservationTimeStatus(LocalDate targetDate, LocalTime openTime, LocalTime closeTime, Long studyCafeId, Long roomId) {
+        List<LocalDateTime[]> allPossibleReservation = reservationRepository.findAllImpossibleReservation(targetDate, studyCafeId, roomId);
 
         for (int i = openTime.getHour(); i < closeTime.getHour(); i++) {
             reservationTimes.put(i, true);
