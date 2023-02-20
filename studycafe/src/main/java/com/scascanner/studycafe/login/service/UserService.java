@@ -30,4 +30,11 @@ public class UserService {
     public User findOneUser(Long userId){
         return userRepository.findOne(userId);
     }
+
+    @Transactional
+    public Long partialUpdate(Long id, UserForm userForm){
+        User user = userRepository.findOne(id);
+        userRepository.save(user);
+        return user.getId();
+    }
 }
