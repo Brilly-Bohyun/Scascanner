@@ -39,7 +39,7 @@ public class StudyCafeDto {
 
     private static ModelMapper modelMapper = new ModelMapper();
 
-    public StudyCafe createDao() {
+    public StudyCafe createEntity() {
         return modelMapper.map(this, StudyCafe.class);
     }
 
