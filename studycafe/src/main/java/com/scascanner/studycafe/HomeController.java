@@ -1,4 +1,4 @@
-package com.scascanner.studycafe.login.controller;
+package com.scascanner.studycafe;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
