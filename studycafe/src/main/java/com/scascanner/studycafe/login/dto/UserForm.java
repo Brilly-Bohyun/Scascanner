@@ -4,7 +4,6 @@ import com.scascanner.studycafe.domain.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.validation.constraints.Email;
@@ -14,6 +13,7 @@ import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @NoArgsConstructor
+@Getter
 public class UserForm {
 
     @NotEmpty(message = "사용자 이메일은 필수 입니다.")
