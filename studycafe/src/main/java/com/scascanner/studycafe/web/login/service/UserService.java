@@ -1,8 +1,8 @@
-package com.scascanner.studycafe.login.service;
+package com.scascanner.studycafe.web.login.service;
 
-import com.scascanner.studycafe.domain.User;
-import com.scascanner.studycafe.login.dto.UserForm;
-import com.scascanner.studycafe.login.repository.UserRepository;
+import com.scascanner.studycafe.domain.entity.User;
+import com.scascanner.studycafe.web.login.dto.UserForm;
+import com.scascanner.studycafe.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

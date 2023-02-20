@@ -1,8 +1,8 @@
 package com.scascanner.studycafe.login.service;
 
-import com.scascanner.studycafe.domain.User;
-import com.scascanner.studycafe.login.dto.UserForm;
-import com.scascanner.studycafe.login.repository.UserRepository;
+import com.scascanner.studycafe.web.login.dto.UserForm;
+import com.scascanner.studycafe.domain.repository.UserRepository;
+import com.scascanner.studycafe.web.login.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,8 @@ import java.time.LocalDate;
 @SpringBootTest
 @Transactional
 public class UserServiceTest{
-    @Autowired UserService userService;
+    @Autowired
+    UserService userService;
     @Autowired UserRepository userRepository;
 
     @Test

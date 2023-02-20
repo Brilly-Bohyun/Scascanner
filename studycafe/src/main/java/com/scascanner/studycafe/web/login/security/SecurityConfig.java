@@ -1,4 +1,4 @@
-package com.scascanner.studycafe.login.security;
+package com.scascanner.studycafe.web.login.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

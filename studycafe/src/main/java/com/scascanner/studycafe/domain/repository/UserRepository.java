@@ -1,6 +1,6 @@
-package com.scascanner.studycafe.login.repository;
+package com.scascanner.studycafe.domain.repository;
 
-import com.scascanner.studycafe.domain.User;
+import com.scascanner.studycafe.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

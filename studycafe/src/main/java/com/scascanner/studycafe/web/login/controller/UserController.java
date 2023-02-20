@@ -1,7 +1,7 @@
-package com.scascanner.studycafe.login.controller;
+package com.scascanner.studycafe.web.login.controller;
 
-import com.scascanner.studycafe.login.dto.UserForm;
-import com.scascanner.studycafe.login.service.UserService;
+import com.scascanner.studycafe.web.login.dto.UserForm;
+import com.scascanner.studycafe.web.login.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

@@ -1,6 +1,6 @@
-package com.scascanner.studycafe.login.dto;
+package com.scascanner.studycafe.web.login.dto;
 
-import com.scascanner.studycafe.domain.User;
+import com.scascanner.studycafe.domain.entity.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

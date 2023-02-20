@@ -1,4 +1,4 @@
-package com.scascanner.studycafe.login.dto;
+package com.scascanner.studycafe.web.login.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
