@@ -5,6 +5,7 @@ import com.scascanner.studycafe.web.reservation.service.ReservationService;
 import com.scascanner.studycafe.web.studycafe.service.StudyCafeService;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,14 +33,12 @@ public class ReservationController {
     private final StudyCafeService studyCafeService;
 
     @GetMapping//date가 2023-02-11의 형태로 올 경우
-    public GetReservationResponse impossibleReservationTimeList(@RequestParam String date, @RequestParam Long studyCafeId, @RequestParam Long roomId) {
-        LocalDate findTargetDate = LocalDate.of(
-                Integer.parseInt(date.substring(0, 4)),
-                Integer.parseInt(date.substring(5, 7)),
-                Integer.parseInt(date.substring(8, 10)));
+    public GetReservationResponse impossibleReservationTimeList(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
+                                                                @RequestParam Long studyCafeId,
+                                                                @RequestParam Long roomId) {
 
         Map<String, LocalTime> studyCafeOperationTime = studyCafeService.findStudyCafeOperationTime(studyCafeId);
-        Map<Integer, Boolean> reservationTimeStatus = reservationService.reservationTimeStatus(findTargetDate, studyCafeOperationTime.get("openTime"),
+        Map<Integer, Boolean> reservationTimeStatus = reservationService.reservationTimeStatus(date, studyCafeOperationTime.get("openTime"),
                 studyCafeOperationTime.get("closeTime"),
                 studyCafeId, roomId);
 
@@ -56,9 +55,9 @@ public class ReservationController {
         }
 
         Date targetDate = Date.builder()
-                .year(findTargetDate.getYear())
-                .month(findTargetDate.getMonthValue())
-                .day(findTargetDate.getDayOfMonth())
+                .year(date.getYear())
+                .month(date.getMonthValue())
+                .day(date.getDayOfMonth())
                 .build();
 
         return GetReservationResponse.builder()
@@ -78,8 +77,12 @@ public class ReservationController {
 
 
     /**
-     *
+     * 예약 요청 DTO
      */
+    static class ReservationRequest {
+        int start;
+        int end;
+    }
 
 
     /**
