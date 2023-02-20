@@ -32,4 +32,16 @@ public class UserApiController {
 
         return new ResponseEntity<>(userInfoDto, HttpStatus.OK);
     }
+
+    @PatchMapping("/api/users/{id}")
+    public ResponseEntity<UserInfoDto> partialUpdate(@PathVariable Long id, @RequestBody @Valid UserForm userForm){
+        Long updatedId = userService.partialUpdate(id, userForm);
+        UserInfoDto updatedUserInfoDto = new UserInfoDto(id, userForm.getEmail(), userForm.getPassword(), userForm.getNickname(),
+                userForm.getName(), userForm.getBirthday());
+
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(new MediaType("application","json", StandardCharsets.UTF_8));
+
+        return new ResponseEntity<>(updatedUserInfoDto, HttpStatus.OK);
+    }
 }
