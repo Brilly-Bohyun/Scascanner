@@ -29,7 +29,7 @@ public class ReservationController {
     private final StudyCafeService studyCafeService;
 
     @GetMapping("/reservation/{date}/{studycafeId}")//date가 20230211의 형태로 올 경우
-    public List<ReservationTimeStatus> impossibleReservationTimeList(@PathVariable String date, @PathVariable Long studycafeId) {
+    public GetReservationResponse impossibleReservationTimeList(@PathVariable String date, @PathVariable Long studycafeId) {
         LocalDate findTargetDate = LocalDate.of(
                 Integer.parseInt(date.substring(0, 4)), Integer.parseInt(date.substring(4, 6)), Integer.parseInt(date.substring(6, 8)));
 
@@ -47,7 +47,17 @@ public class ReservationController {
                             .build());
 
         }
-        return reservationTimeStatusList;
+
+        Date targetDate = Date.builder()
+                .year(findTargetDate.getYear())
+                .month(findTargetDate.getMonthValue())
+                .day(findTargetDate.getDayOfMonth())
+                .build();
+
+        return GetReservationResponse.builder()
+                .reservationTimeStatus(reservationTimeStatusList)
+                .date(targetDate)
+                .build();
     }
 
     @PostMapping("/reservation")
@@ -66,7 +76,7 @@ public class ReservationController {
     @Builder
     static class GetReservationResponse{
         private Date date;
-        private ReservationTimeStatus reservationTimeStatus;
+        private List<ReservationTimeStatus> reservationTimeStatus;
     }
 
     /**
