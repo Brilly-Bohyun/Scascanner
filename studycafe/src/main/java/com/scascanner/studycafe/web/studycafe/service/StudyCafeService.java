@@ -45,9 +45,8 @@ public class StudyCafeService {
      * 모든 스터디 카페 목록을 조회하는 메소드
      * @return 모든 스터디 카페 목록 리스트
      */
-    public List<StudyCafeDto> findStudyCafes() {
-        return studyCafeRepository.findAll().stream()
-                .map(StudyCafeDto::mapToDto).collect(Collectors.toList());
+    public List<StudyCafe> findStudyCafes() {
+        return studyCafeRepository.findAll();
     }
 
     /**
@@ -55,7 +54,7 @@ public class StudyCafeService {
      * @param cafeId 스터디 카페 고유 Id
      * @return 해당 Id 값의 스터디 카페
      */
-    public StudyCafeDto findOne(Long cafeId) {
-        return StudyCafeDto.mapToDto(studyCafeRepository.findById(cafeId));
+    public StudyCafe findOne(Long cafeId) {
+        return studyCafeRepository.findById(cafeId);
     }
 }
