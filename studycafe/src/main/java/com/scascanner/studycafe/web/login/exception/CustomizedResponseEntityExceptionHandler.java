@@ -27,4 +27,11 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 
         return new ResponseEntity<Object>(exceptionResponse, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(UnMatchedPasswordException.class)
+    public final ResponseEntity<Object> UnMatchedPasswordException(Exception ex, WebRequest request){
+        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(), ex.getMessage(), request.getDescription(false));
+
+        return new ResponseEntity<Object>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
 }
