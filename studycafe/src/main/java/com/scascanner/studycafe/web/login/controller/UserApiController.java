@@ -1,7 +1,10 @@
 package com.scascanner.studycafe.web.login.controller;
 
+import com.scascanner.studycafe.domain.entity.User;
 import com.scascanner.studycafe.web.login.dto.UserForm;
 import com.scascanner.studycafe.web.login.dto.UserInfoDto;
+import com.scascanner.studycafe.web.login.dto.UserSavedDto;
+import com.scascanner.studycafe.web.login.exception.UserNotFoundException;
 import com.scascanner.studycafe.web.login.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,15 +23,15 @@ public class UserApiController {
 
     private final UserService userService;
 
-    @PostMapping("/api/new-user")
-    public ResponseEntity<UserInfoDto> saveUser(@RequestBody @Valid UserForm userForm){
+    @PostMapping("/api/users")
+    public ResponseEntity<UserSavedDto> saveUser(@RequestBody @Valid UserForm userForm){
         Long id = userService.join(userForm);
-        UserInfoDto userInfoDto = getUserInfoDto(id, userForm);
+        UserSavedDto userSavedDto = new UserSavedDto(id, userForm.getName(),new Date());
 
         HttpHeaders header = new HttpHeaders();
         header.setContentType(new MediaType("application","json", StandardCharsets.UTF_8));
 
-        return new ResponseEntity<>(userInfoDto, HttpStatus.OK);
+        return new ResponseEntity<>(userSavedDto, HttpStatus.OK);
     }
 
     @PatchMapping("/api/users/{id}")
@@ -39,6 +43,20 @@ public class UserApiController {
         header.setContentType(new MediaType("application","json", StandardCharsets.UTF_8));
 
         return new ResponseEntity<>(updatedUserInfoDto, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/api/users/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable Long id){
+        User user = userService.deleteById(id);
+
+        if(user == null){
+            throw new UserNotFoundException(String.format("ID[%s] is Not Found", id));
+        }
+
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(new MediaType("application","json", StandardCharsets.UTF_8));
+
+        return ResponseEntity.ok().body("Delete Success");
     }
 
     private UserInfoDto getUserInfoDto(Long id, UserForm userForm) {
