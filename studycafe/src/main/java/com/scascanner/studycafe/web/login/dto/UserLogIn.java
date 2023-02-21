@@ -1,9 +1,6 @@
 package com.scascanner.studycafe.web.login.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
 
@@ -14,4 +11,10 @@ public class UserLogIn {
     private String email;
     @NotEmpty(message = "로그인을 위해 비밀번호는 필수입니다.")
     private String password;
+
+    @Builder
+    public UserLogIn(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 }
