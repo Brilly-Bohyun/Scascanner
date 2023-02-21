@@ -1,7 +1,5 @@
 package com.scascanner.studycafe.web.login.exception;
 
-import com.scascanner.studycafe.domain.entity.User;
-import com.scascanner.studycafe.web.login.dto.ExceptionResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
