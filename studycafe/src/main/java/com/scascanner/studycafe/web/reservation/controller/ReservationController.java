@@ -1,17 +1,22 @@
 package com.scascanner.studycafe.web.reservation.controller;
 
 import com.scascanner.studycafe.domain.entity.reservation.Reservation;
+import com.scascanner.studycafe.domain.entity.reservation.ReservationStatus;
+import com.scascanner.studycafe.web.RoomService;
+import com.scascanner.studycafe.web.UserService;
 import com.scascanner.studycafe.web.reservation.service.ReservationService;
 import com.scascanner.studycafe.web.studycafe.service.StudyCafeService;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,6 +36,8 @@ public class ReservationController {
 
     private final ReservationService reservationService;
     private final StudyCafeService studyCafeService;
+    private final UserService userService;
+    private final RoomService roomService;
 
     @GetMapping//date가 2023-02-11의 형태로 올 경우
     public GetReservationResponse impossibleReservationTimeList(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
@@ -67,23 +74,24 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<?> reserve(Reservation reservation) {
+    public ResponseEntity<?> reserve(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
+                                     @RequestParam Long studyCafeId,
+                                     @RequestParam Long roomId,
+                                     @RequestParam @DateTimeFormat(pattern = "kk:mm:ss") LocalTime startTime,
+                                     @RequestParam @DateTimeFormat(pattern = "kk:mm:ss") LocalTime endTime,
+                                     @CookieValue(name = "memberId", required = true) Long userId) {
+
+        Reservation reservation = new Reservation(
+                studyCafeService.findStudyCafeById(studyCafeId),
+                userService.findUserById(userId),
+                roomService.findRoomById(roomId),
+                date, startTime, endTime, ReservationStatus.RESERVED);
         reservationService.reserve(reservation);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(URI.create("/"));
 
         return new ResponseEntity<>(httpHeaders, HttpStatus.MOVED_PERMANENTLY); // "/"으로 redirect , 후에 예약 상세페이지를 만들면 예약 상세 페이지로 redirect하는 것으로 변경 !
     }
-
-
-    /**
-     * 예약 요청 DTO
-     */
-    static class ReservationRequest {
-        int start;
-        int end;
-    }
-
 
     /**
      * 예약 조회 응답 DTO
