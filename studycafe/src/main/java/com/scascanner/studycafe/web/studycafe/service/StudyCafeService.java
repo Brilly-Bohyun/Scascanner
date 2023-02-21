@@ -1,5 +1,6 @@
 package com.scascanner.studycafe.web.studycafe.service;
 
+import com.scascanner.studycafe.domain.entity.StudyCafe;
 import com.scascanner.studycafe.domain.repository.StudyCafeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,10 @@ public class StudyCafeService {
         studyCafeOperationTime.put("openTime", studyCafeOperationTimeList.get(0));
         studyCafeOperationTime.put("closeTime", studyCafeOperationTimeList.get(1));
         return studyCafeOperationTime;
+    }
+
+    public StudyCafe findStudyCafeById(Long studyCafeId) {
+        return studyCafeRepository.findStudyCafeById(studyCafeId);
     }
 
 
