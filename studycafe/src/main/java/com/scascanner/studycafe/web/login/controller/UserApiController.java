@@ -5,7 +5,6 @@ import com.scascanner.studycafe.web.login.dto.UserForm;
 import com.scascanner.studycafe.web.login.dto.UserInfoDto;
 import com.scascanner.studycafe.web.login.dto.UserLogIn;
 import com.scascanner.studycafe.web.login.dto.UserSavedDto;
-import com.scascanner.studycafe.web.login.exception.UnMatchedPasswordException;
 import com.scascanner.studycafe.web.login.exception.UserNotFoundException;
 import com.scascanner.studycafe.web.login.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +27,10 @@ public class UserApiController {
     @PostMapping("/api/users")
     public ResponseEntity<UserSavedDto> saveUser(@RequestBody @Valid UserForm userForm){
         Long id = userService.join(userForm);
-        UserSavedDto userSavedDto = new UserSavedDto(id, userForm.getName(),new Date());
+        UserSavedDto userSavedDto = UserSavedDto.builder()
+                .id(id)
+                .name(userForm.getName())
+                .joinDate(new Date()).build();
 
         HttpHeaders header = new HttpHeaders();
         header.setContentType(new MediaType("application","json", StandardCharsets.UTF_8));
@@ -68,8 +70,15 @@ public class UserApiController {
     }
 
     private UserInfoDto getUserInfoDto(Long id, UserForm userForm) {
-        UserInfoDto updatedUserInfoDto = new UserInfoDto(id, userForm.getEmail(), userForm.getPassword(), userForm.getNickname(),
-                userForm.getName(), userForm.getBirthday());
+        UserInfoDto updatedUserInfoDto = UserInfoDto.builder()
+                .id(id)
+                .email(userForm.getEmail())
+                .password(userForm.getPassword())
+                .nickname(userForm.getNickname())
+                .name(userForm.getName())
+                .birthday(userForm.getBirthday())
+                .build();
         return updatedUserInfoDto;
+
     }
 }

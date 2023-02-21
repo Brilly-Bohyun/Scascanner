@@ -1,7 +1,6 @@
 package com.scascanner.studycafe.web.login.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -9,8 +8,8 @@ import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
-@Data
-@AllArgsConstructor
+@NoArgsConstructor
+@Getter
 public class UserInfoDto {
     private Long id;
 
@@ -30,4 +29,14 @@ public class UserInfoDto {
 
     @Past
     private LocalDate birthday;
+
+    @Builder
+    public UserInfoDto(Long id, String email, String password, String nickname, String name, LocalDate birthday) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.name = name;
+        this.birthday = birthday;
+    }
 }

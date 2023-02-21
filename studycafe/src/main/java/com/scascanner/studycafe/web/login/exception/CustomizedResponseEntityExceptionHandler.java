@@ -16,22 +16,30 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request){
-        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(), ex.getMessage(), request.getDescription(false));
+        ExceptionResponse exceptionResponse = getExceptionResponse(ex, request);
 
         return new ResponseEntity<Object>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(UserNotFoundException.class)
     public final ResponseEntity<Object> handleUserNotFoundException(Exception ex, WebRequest request){
-        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(), ex.getMessage(), request.getDescription(false));
+        ExceptionResponse exceptionResponse = getExceptionResponse(ex, request);
 
         return new ResponseEntity<Object>(exceptionResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(UnMatchedPasswordException.class)
     public final ResponseEntity<Object> UnMatchedPasswordException(Exception ex, WebRequest request){
-        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(), ex.getMessage(), request.getDescription(false));
+        ExceptionResponse exceptionResponse = getExceptionResponse(ex, request);
 
         return new ResponseEntity<Object>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    private ExceptionResponse getExceptionResponse(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = ExceptionResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .message(ex.getMessage())
+                .details(request.getDescription(false)).build();
+        return exceptionResponse;
     }
 }
