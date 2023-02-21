@@ -17,11 +17,13 @@ public class StudyCafeService {
 
     private final StudyCafeRepository studyCafeRepository;
     private Map<String, LocalTime> studyCafeOperationTime = new ConcurrentHashMap<>();
-    
+
     public Map<String, LocalTime> findStudyCafeOperationTime(Long studycafeId) {
         List<LocalTime> studyCafeOperationTimeList = studyCafeRepository.findStudyCafeOperationTime(studycafeId);
-        studyCafeOperationTime.put("openTime", studyCafeOperationTime.get(0));
-        studyCafeOperationTime.put("closeTime", studyCafeOperationTime.get(1));
+        studyCafeOperationTime.put("openTime", studyCafeOperationTimeList.get(0));
+        studyCafeOperationTime.put("closeTime", studyCafeOperationTimeList.get(1));
         return studyCafeOperationTime;
     }
+
+
 }
