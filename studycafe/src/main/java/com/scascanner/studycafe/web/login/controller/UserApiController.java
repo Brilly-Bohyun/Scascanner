@@ -79,6 +79,5 @@ public class UserApiController {
                 .birthday(userForm.getBirthday())
                 .build();
         return updatedUserInfoDto;
-
     }
 }

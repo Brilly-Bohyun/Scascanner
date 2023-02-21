@@ -38,7 +38,6 @@ public class UserServiceTest{
         assertEquals(userRepository.findByName(name).get(0), userRepository.findById(savedId).get());
     }
 
-
     @Test
     public void 이메일로찾기() throws Exception{
         //Given
