@@ -5,6 +5,7 @@ import com.scascanner.studycafe.web.login.dto.UserForm;
 import com.scascanner.studycafe.web.login.dto.UserInfoDto;
 import com.scascanner.studycafe.web.login.dto.UserLogIn;
 import com.scascanner.studycafe.web.login.dto.UserSavedDto;
+import com.scascanner.studycafe.web.login.exception.UnMatchedPasswordException;
 import com.scascanner.studycafe.web.login.exception.UserNotFoundException;
 import com.scascanner.studycafe.web.login.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -37,12 +38,8 @@ public class UserApiController {
 
     @PostMapping("/api/users/login")
     public ResponseEntity<?> login(@RequestBody UserLogIn userLogIn){
-        try {
             Long userId = userService.longIn(userLogIn);
             return ResponseEntity.ok().body("Login Succeeded");
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
     }
 
     @PatchMapping("/api/users/{id}")

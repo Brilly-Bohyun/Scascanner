@@ -69,7 +69,7 @@ public class UserService {
 
     private void checkPassword(String loginPassword, String savedPassword) {
         if(!passwordEncoder.matches(loginPassword, savedPassword)){
-            throw new UnMatchedPasswordException(String.format("Password is not matched"));
+            throw new UnMatchedPasswordException("Password is not matched");
         }
     }
 }
