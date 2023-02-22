@@ -34,5 +34,16 @@ public class StudyCafe {
     private String address;
     private String comment;
 
+    public Long getId() {
+        return id;
+    }
 
+    public void update(String name, Integer minUsingTime, LocalTime openTime, LocalTime closeTime, String address, String comment) {
+        this.name = name;
+        this.minUsingTime = minUsingTime;
+        this.openTime = openTime;
+        this.closeTime = closeTime;
+        this.address = address;
+        this.comment = comment;
+    }
 }

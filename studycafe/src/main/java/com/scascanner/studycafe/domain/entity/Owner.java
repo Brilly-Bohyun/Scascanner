@@ -26,4 +26,8 @@ public class Owner {
 
     private String name;
     private LocalDate birthday;
+
+    public Long getId() {
+        return id;
+    }
 }

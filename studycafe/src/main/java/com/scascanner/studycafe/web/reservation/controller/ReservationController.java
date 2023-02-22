@@ -2,12 +2,11 @@ package com.scascanner.studycafe.web.reservation.controller;
 
 import com.scascanner.studycafe.domain.entity.reservation.Reservation;
 import com.scascanner.studycafe.domain.entity.reservation.ReservationStatus;
-import com.scascanner.studycafe.web.RoomService;
-import com.scascanner.studycafe.web.UserService;
+import com.scascanner.studycafe.web.login.service.UserService;
 import com.scascanner.studycafe.web.reservation.service.ReservationService;
+import com.scascanner.studycafe.web.studycafe.service.RoomService;
 import com.scascanner.studycafe.web.studycafe.service.StudyCafeService;
 import lombok.Builder;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
@@ -16,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -82,9 +80,9 @@ public class ReservationController {
                                      @CookieValue(name = "memberId", required = true) Long userId) {
 
         Reservation reservation = new Reservation(
-                studyCafeService.findStudyCafeById(studyCafeId),
-                userService.findUserById(userId),
-                roomService.findRoomById(roomId),
+                studyCafeService.findById(studyCafeId),
+                userService.findById(userId),
+                roomService.findById(roomId),
                 date, startTime, endTime, ReservationStatus.RESERVED);
         reservationService.reserve(reservation);
         HttpHeaders httpHeaders = new HttpHeaders();

@@ -26,4 +26,13 @@ public class Room {
 
     private Integer headCount;
     private Integer price;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void update(Integer headCount, Integer price) {
+        this.headCount = headCount;
+        this.price = price;
+    }
 }
