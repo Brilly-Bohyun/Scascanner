@@ -26,4 +26,13 @@ public class User {
     public Long getId() {
         return id;
     }
+  
+    @Builder
+    public User(String email, String password, String nickname, String name, LocalDate birthday) {
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.name = name;
+        this.birthday = birthday;
+    }
 }
