@@ -3,7 +3,6 @@ package com.scascanner.studycafe.web.studycafe.dto;
 import com.scascanner.studycafe.domain.entity.Room;
 import lombok.Getter;
 import lombok.Setter;
-import org.modelmapper.ModelMapper;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -22,13 +21,11 @@ public class RoomEditDto {
     @Positive(message = "적절한 가격을 입력해주세요.")
     private Integer price;
 
-    private static ModelMapper modelMapper = new ModelMapper();
-
-    public Room createEntity() {
-        return modelMapper.map(this, Room.class);
-    }
-
-    public static RoomEditDto mapToDto(Room room) {
-        return modelMapper.map(room, RoomEditDto.class);
+    public Room toEntity(){
+        return Room.builder()
+                .id(id)
+                .headCount(headCount)
+                .price(price)
+                .build();
     }
 }

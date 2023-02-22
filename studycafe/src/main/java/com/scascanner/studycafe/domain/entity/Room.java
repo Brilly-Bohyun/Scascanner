@@ -1,6 +1,7 @@
 package com.scascanner.studycafe.domain.entity;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
@@ -32,6 +33,14 @@ public class Room {
     }
 
     public void update(Integer headCount, Integer price) {
+        this.headCount = headCount;
+        this.price = price;
+    }
+
+    @Builder
+    public Room(Long id, StudyCafe studyCafe, Integer headCount, Integer price) {
+        this.id = id;
+        this.studyCafe = studyCafe;
         this.headCount = headCount;
         this.price = price;
     }
