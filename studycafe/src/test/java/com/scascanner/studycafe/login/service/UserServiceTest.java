@@ -77,7 +77,7 @@ public class UserServiceTest{
                 .email(email)
                 .password(password)
                 .build();
-        Long logInedId = userService.longIn(userLogIn);
+        Long logInedId = userService.logIn(userLogIn);
         return logInedId;
     }
 
