@@ -1,15 +1,13 @@
 package com.scascanner.studycafe.web.studycafe.controller;
 
+import com.scascanner.studycafe.domain.entity.Room;
 import com.scascanner.studycafe.web.studycafe.dto.RoomDto;
 import com.scascanner.studycafe.web.studycafe.dto.RoomEditDto;
 import com.scascanner.studycafe.web.studycafe.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,7 +15,7 @@ import java.util.stream.Collectors;
 /**
  * 스터디카페에서 상세 룸 조회를 할 때 사용할 컨트롤러
  */
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class RoomController {
 
@@ -31,18 +29,18 @@ public class RoomController {
      * @return
      */
     @GetMapping("/studycafe/{cafeId}/room")
-    public List<RoomDto> rooms(Model model, @PathVariable Long cafeId) {
+    public List<Room> rooms(Model model, @PathVariable Long cafeId) {
 
-        List<RoomDto> rooms = roomService.findAllInStudyCafe(cafeId).stream().map(RoomDto::mapToDto).collect(Collectors.toList());
+        List<Room> rooms = roomService.findAllInStudyCafe(cafeId);
         model.addAttribute("rooms", rooms);
 
         return rooms;
     }
 
     @GetMapping("/studycafe/{cafeId}/rooms/{roomId}")
-    public RoomDto room(Model model, @PathVariable Long cafeId, @PathVariable Long roomId) {
+    public Room room(Model model, @PathVariable Long cafeId, @PathVariable Long roomId) {
 
-        RoomDto room = RoomDto.mapToDto(roomService.findOneInStudyCafe(cafeId, roomId));
+        Room room = roomService.findOneInStudyCafe(cafeId, roomId);
         model.addAttribute("room", room);
 
         return room;
@@ -51,8 +49,7 @@ public class RoomController {
     @GetMapping("/studycafe/{cafeId}/rooms/{roomId}/edit")
     public RoomEditDto editRoomForm(@PathVariable String cafeId, @PathVariable Long roomId, Model model) {
 
-        RoomEditDto roomEditDto = RoomEditDto.mapToDto(roomService.findOne(roomId));
-
+        RoomEditDto roomEditDto = new RoomEditDto();
         model.addAttribute("form", roomEditDto);
         return roomEditDto;
 
