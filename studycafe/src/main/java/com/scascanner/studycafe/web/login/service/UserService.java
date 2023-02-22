@@ -44,7 +44,7 @@ public class UserService {
     }
 
     @Transactional
-    public Long logIn(UserLogIn userLogIn){
+    public Long longIn(UserLogIn userLogIn){
         User user = findByEmail(userLogIn.getEmail());
         checkPassword(userLogIn.getPassword(), user.getPassword());
         return user.getId();
