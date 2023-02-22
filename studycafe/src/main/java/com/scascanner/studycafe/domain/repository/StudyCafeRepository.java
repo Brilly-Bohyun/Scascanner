@@ -1,19 +1,26 @@
 package com.scascanner.studycafe.domain.repository;
 
 import com.scascanner.studycafe.domain.entity.StudyCafe;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.time.LocalTime;
 import java.util.List;
 
 @Repository
-@RequiredArgsConstructor
 public class StudyCafeRepository {
 
     @PersistenceContext
-    private final EntityManager em;
+    private EntityManager em;
+
+    public List<LocalTime> findStudyCafeOperationTime(Long studycafeId) {
+
+        return em.createQuery("select s.openTime, s.closeTime from StudyCafe s where s.id = :id")
+                .setParameter("id", studycafeId)
+                .getResultList();
+
+    }
 
     public void save(StudyCafe studyCafe) {
 

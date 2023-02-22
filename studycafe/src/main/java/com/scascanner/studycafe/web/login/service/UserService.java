@@ -33,7 +33,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User findOneUser(Long userId){
+    public User findById(Long userId){
         return userRepository.findById(userId)
                 .orElseThrow(()-> new UserNotFoundException(String.format("There is no Id : %s", userId)));
     }
