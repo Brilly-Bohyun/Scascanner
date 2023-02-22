@@ -2,9 +2,9 @@ package com.scascanner.studycafe.web.studycafe.dto;
 
 import com.scascanner.studycafe.domain.entity.Room;
 import com.scascanner.studycafe.domain.entity.StudyCafe;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.modelmapper.ModelMapper;
 
 @Getter
 @Setter
@@ -16,13 +16,20 @@ public class RoomDto {
     private Integer headCount;
     private Integer price;
 
-    private static ModelMapper modelMapper = new ModelMapper();
-
-    public Room createEntity() {
-        return modelMapper.map(this, Room.class);
+    @Builder
+    public RoomDto(Long id, StudyCafe studyCafe, Integer headCount, Integer price) {
+        this.id = id;
+        this.studyCafe = studyCafe;
+        this.headCount = headCount;
+        this.price = price;
     }
 
-    public static RoomDto mapToDto(Room room) {
-        return modelMapper.map(room, RoomDto.class);
+    public Room toEntity(){
+        return Room.builder()
+                .id(id)
+                .studyCafe(studyCafe)
+                .headCount(headCount)
+                .price(price)
+                .build();
     }
 }
