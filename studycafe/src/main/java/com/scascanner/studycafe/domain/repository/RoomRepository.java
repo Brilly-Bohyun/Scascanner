@@ -1,21 +1,18 @@
 package com.scascanner.studycafe.domain.repository;
 
 import com.scascanner.studycafe.domain.entity.Room;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Transactional(readOnly = true)
-@RequiredArgsConstructor
 @Repository
 public class RoomRepository {
 
     @PersistenceContext
-    private final EntityManager em;
+    private EntityManager em;
 
     public void save(Room room) {
 
@@ -32,7 +29,7 @@ public class RoomRepository {
      * @param roomId
      * @return
      */
-    public Room findOne(Long roomId) {
+    public Room findById(Long roomId) {
         return em.find(Room.class, roomId);
     }
 

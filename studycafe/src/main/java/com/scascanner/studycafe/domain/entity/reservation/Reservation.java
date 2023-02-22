@@ -5,7 +5,6 @@ import com.scascanner.studycafe.domain.entity.StudyCafe;
 import com.scascanner.studycafe.domain.entity.User;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -15,7 +14,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -38,13 +38,20 @@ public class Reservation {
     @JoinColumn(name = "room_id")
     private Room room;
 
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private LocalDate date;
+    private LocalTime startTime;
+    private LocalTime endTime;
 
     @Enumerated(value = EnumType.STRING)
     private ReservationStatus reservationStatus;
 
-    public Long getId() {
-        return id;
+    public Reservation(StudyCafe studyCafe, User user, Room room, LocalDate date, LocalTime startTime, LocalTime endTime, ReservationStatus reservationStatus) {
+        this.studyCafe = studyCafe;
+        this.user = user;
+        this.room = room;
+        this.date = date;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.reservationStatus = reservationStatus;
     }
 }

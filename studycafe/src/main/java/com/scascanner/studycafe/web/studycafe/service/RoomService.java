@@ -19,12 +19,12 @@ public class RoomService {
     @Transactional
     public void updateRoom(Long roomId, RoomEditDto roomEditDto) {
 
-        Room room = roomRepository.findOne(roomId);
+        Room room = roomRepository.findById(roomId);
         room.update(roomEditDto.getHeadCount(), roomEditDto.getPrice());
     }
 
-    public Room findOne(Long roomId) {
-        return roomRepository.findOne(roomId);
+    public Room findById(Long roomId) {
+        return roomRepository.findById(roomId);
     }
 
     public List<Room> findAll() {

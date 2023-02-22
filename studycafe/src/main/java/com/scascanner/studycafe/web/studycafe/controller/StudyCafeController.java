@@ -57,7 +57,7 @@ public class StudyCafeController {
     @GetMapping("/studycafe/{cafeId}")
     public StudyCafeDto studyCafe(@PathVariable Long cafeId, Model model) {
 
-        StudyCafeDto studyCafe = StudyCafeDto.mapToDto(studyCafeService.findOne(cafeId));
+        StudyCafeDto studyCafe = StudyCafeDto.mapToDto(studyCafeService.findById(cafeId));
         model.addAttribute("studycafe", studyCafe);
 
         // 뷰에서 뭔가 정보를 깔끔하게 띄어주면 좋을 것 같음

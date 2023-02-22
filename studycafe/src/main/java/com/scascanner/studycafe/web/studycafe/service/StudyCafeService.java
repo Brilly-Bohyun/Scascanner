@@ -6,9 +6,11 @@ import com.scascanner.studycafe.web.studycafe.dto.StudyCafeDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.time.LocalTime;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 
 @Service
 @Transactional(readOnly = true) // 읽기 전용이면 영속성 컨텍스트가 스냅샷을 보관하지 않아 메모리 사용량을 최적화
@@ -16,6 +18,14 @@ import java.util.stream.Collectors;
 public class StudyCafeService {
 
     private final StudyCafeRepository studyCafeRepository;
+    private Map<String, LocalTime> studyCafeOperationTime = new ConcurrentHashMap<>();
+
+    public Map<String, LocalTime> findStudyCafeOperationTime(Long studycafeId) {
+        List<LocalTime> studyCafeOperationTimeList = studyCafeRepository.findStudyCafeOperationTime(studycafeId);
+        studyCafeOperationTime.put("openTime", studyCafeOperationTimeList.get(0));
+        studyCafeOperationTime.put("closeTime", studyCafeOperationTimeList.get(1));
+        return studyCafeOperationTime;
+    }
 
     /**
      * 스터디 카페 추가 메소드
@@ -54,7 +64,7 @@ public class StudyCafeService {
      * @param cafeId 스터디 카페 고유 Id
      * @return 해당 Id 값의 스터디 카페
      */
-    public StudyCafe findOne(Long cafeId) {
+    public StudyCafe findById(Long cafeId) {
         return studyCafeRepository.findById(cafeId);
     }
 }

@@ -51,7 +51,7 @@ public class RoomController {
     @GetMapping("/studycafe/{cafeId}/rooms/{roomId}/edit")
     public RoomEditDto editRoomForm(@PathVariable String cafeId, @PathVariable Long roomId, Model model) {
 
-        RoomEditDto roomEditDto = RoomEditDto.mapToDto(roomService.findOne(roomId));
+        RoomEditDto roomEditDto = RoomEditDto.mapToDto(roomService.findById(roomId));
 
         model.addAttribute("form", roomEditDto);
         return roomEditDto;
