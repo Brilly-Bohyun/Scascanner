@@ -1,17 +1,16 @@
-package com.scascanner.studycafe.domain;
+package com.scascanner.studycafe.domain.entity;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class User {
 
     @Id @GeneratedValue
@@ -23,4 +22,13 @@ public class User {
     private String nickname;
     private String name;
     private LocalDate birthday;
+
+    @Builder
+    public User(String email, String password, String nickname, String name, LocalDate birthday) {
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.name = name;
+        this.birthday = birthday;
+    }
 }

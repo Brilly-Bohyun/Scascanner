@@ -1,4 +1,4 @@
-package com.scascanner.studycafe.domain;
+package com.scascanner.studycafe.domain.entity;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
