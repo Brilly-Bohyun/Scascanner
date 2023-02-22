@@ -49,5 +49,13 @@ public class Reservation {
     @Enumerated(value = EnumType.STRING)
     private ReservationStatus reservationStatus;
 
-
+    public Reservation(StudyCafe studyCafe, User user, Room room, LocalDate date, LocalTime startTime, LocalTime endTime, ReservationStatus reservationStatus) {
+        this.studyCafe = studyCafe;
+        this.user = user;
+        this.room = room;
+        this.date = date;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.reservationStatus = reservationStatus;
+    }
 }
