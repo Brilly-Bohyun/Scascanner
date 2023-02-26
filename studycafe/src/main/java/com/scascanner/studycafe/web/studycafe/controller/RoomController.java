@@ -2,11 +2,11 @@ package com.scascanner.studycafe.web.studycafe.controller;
 
 import com.scascanner.studycafe.domain.entity.Room;
 import com.scascanner.studycafe.web.studycafe.dto.RoomDto;
-import com.scascanner.studycafe.web.studycafe.dto.RoomEditDto;
+import com.scascanner.studycafe.web.studycafe.dto.RoomEditFormDto;
 import com.scascanner.studycafe.web.studycafe.service.RoomService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,29 +29,47 @@ public class RoomController {
      * @return
      */
     @GetMapping("/studycafe/{cafeId}/room")
-    public List<Room> rooms(Model model, @PathVariable Long cafeId) {
+    public List<RoomDto> rooms(Model model, @PathVariable Long cafeId) {
 
-        List<Room> rooms = roomService.findAllInStudyCafe(cafeId);
+        List<RoomDto> rooms = roomService.findAllInStudyCafe(cafeId).stream()
+                .map(r -> RoomDto
+                        .builder()
+                        .id(r.getId())
+                        .studyCafe(r.getStudyCafe())
+                        .headCount(r.getHeadCount())
+                        .price(r.getPrice())
+                        .build()
+                ).collect(Collectors.toList());
+
         model.addAttribute("rooms", rooms);
 
         return rooms;
     }
 
-    @GetMapping("/studycafe/{cafeId}/rooms/{roomId}")
-    public Room room(Model model, @PathVariable Long cafeId, @PathVariable Long roomId) {
+    @GetMapping("/studycafe/{cafeId}/room/{roomId}")
+    public RoomDto room(Model model, @PathVariable Long cafeId, @PathVariable Long roomId) {
 
         Room room = roomService.findOneInStudyCafe(cafeId, roomId);
-        model.addAttribute("room", room);
 
-        return room;
+        RoomDto roomDto = RoomDto.builder()
+                .id(room.getId())
+                .studyCafe(room.getStudyCafe())
+                .headCount(room.getHeadCount())
+                .price(room.getPrice())
+                .build();
+
+        model.addAttribute("room", roomDto);
+
+        return roomDto;
     }
 
-    @GetMapping("/studycafe/{cafeId}/rooms/{roomId}/edit")
-    public RoomEditDto editRoomForm(@PathVariable String cafeId, @PathVariable Long roomId, Model model) {
+    @GetMapping("/studycafe/{cafeId}/room/{roomId}/edit")
+    public RoomEditFormDto editRoomForm(@PathVariable String cafeId, @PathVariable Long roomId, Model model) {
 
-        RoomEditDto roomEditDto = new RoomEditDto();
-        model.addAttribute("form", roomEditDto);
-        return roomEditDto;
+        RoomEditFormDto roomEditFormDto = new RoomEditFormDto();
+        model.addAttribute("form", roomEditFormDto);
+
+        return roomEditFormDto;
 
         // return 뷰 논리 이름
     }
@@ -63,10 +81,10 @@ public class RoomController {
      * @param roomId
      * @return
      */
-    @PostMapping("/studycafe/{cafeId}/rooms/{roomId}/edit")
-    public void edit(@ModelAttribute RoomEditDto roomEditDto, Model model, @PathVariable Long cafeId, @PathVariable Long roomId) {
+    @PostMapping("/studycafe/{cafeId}/room/{roomId}/edit")
+    public void edit(@Validated @RequestBody RoomEditFormDto roomEditFormDto, Model model, @PathVariable Long cafeId, @PathVariable Long roomId) {
 
-        roomService.updateRoom(roomId, roomEditDto);
+        roomService.updateRoom(roomId, roomEditFormDto);
 
         // 리다이렉트 ("redirect:/studycafe/{cafeId}/rooms")
     }

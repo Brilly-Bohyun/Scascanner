@@ -2,10 +2,11 @@ package com.scascanner.studycafe.web.studycafe.service;
 
 import com.scascanner.studycafe.domain.entity.StudyCafe;
 import com.scascanner.studycafe.domain.repository.StudyCafeRepository;
-import com.scascanner.studycafe.web.studycafe.dto.StudyCafeDto;
+import com.scascanner.studycafe.web.studycafe.dto.StudyCafeEditFormDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
@@ -37,18 +38,18 @@ public class StudyCafeService {
     }
 
     /**
-     * 특정 스터디 카페의 최소 사용시간을 수정하는 메소드
+     * 특정 스터디 카페의 내용들을 수정하는 메소드
      * 필터나 인터셉터 사용 가능성 있음
+     * 필드 일부만 수정 가능하도록 추후 리펙토링
      * @param cafeId 특정 스터디 카페 Id
-     * @param minUsingTime 변경할 최소 사용시간
+     * @param studyCafeEditFormDto 변경할 데이터
      */
     @Transactional  // 쓰기를 해야하는 로직은 별도로 어노테이션을 달아준다 (readOnly 디폴트값이 False 이므로)
-    public void updateMinUsingTime(Long cafeId, Integer minUsingTime) {
+    public void update(Long cafeId, StudyCafeEditFormDto studyCafeEditFormDto) {
         StudyCafe studyCafe = studyCafeRepository.findById(cafeId);
-        StudyCafeDto studyCafeDto = StudyCafeDto.mapToDto(studyCafe);
-
-        studyCafeDto.setMinUsingTime(minUsingTime);
-        // 업데이트 쿼리는 별도로 날려야 하는가?
+        studyCafe.update(studyCafeEditFormDto.getName(), studyCafeEditFormDto.getMinUsingTime()
+        , studyCafeEditFormDto.getOpenTime(), studyCafeEditFormDto.getCloseTime(), studyCafeEditFormDto.getAddress()
+        ,studyCafeEditFormDto.getComment());
     }
 
     /**

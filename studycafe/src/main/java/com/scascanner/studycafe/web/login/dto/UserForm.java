@@ -42,13 +42,12 @@ public class UserForm {
     }
 
     public User toEntity(){
-        User user = User.builder()
+        return User.builder()
                 .email(email)
                 .password(new BCryptPasswordEncoder().encode(password))
                 .nickname(nickname)
                 .name(name)
                 .birthday(birthday)
                 .build();
-        return user;
     }
 }
