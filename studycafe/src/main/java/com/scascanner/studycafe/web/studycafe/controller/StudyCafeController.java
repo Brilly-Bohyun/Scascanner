@@ -3,10 +3,12 @@ package com.scascanner.studycafe.web.studycafe.controller;
 import com.scascanner.studycafe.domain.entity.StudyCafe;
 import com.scascanner.studycafe.web.studycafe.dto.StudyCafeAddFormDto;
 import com.scascanner.studycafe.web.studycafe.dto.StudyCafeDto;
+import com.scascanner.studycafe.web.studycafe.dto.StudyCafeEditFormDto;
 import com.scascanner.studycafe.web.studycafe.service.StudyCafeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,6 +38,13 @@ public class StudyCafeController {
 
         return studyCafe;
 //        return "/redirect:/";   // 스터디카페 등록 후 별도의 창을 띄울지는 나중에 결정
+    }
+
+    @PostMapping("/studycafe/{cafeId}/edit")
+    public StudyCafeEditFormDto edit(@Validated @RequestBody StudyCafeEditFormDto studyCafeEditFormDto, @PathVariable Long cafeId) {
+
+        studyCafeService.update(cafeId, studyCafeEditFormDto);
+        return studyCafeEditFormDto;
     }
 
     /**
