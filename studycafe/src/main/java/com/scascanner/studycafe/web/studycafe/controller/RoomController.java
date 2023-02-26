@@ -6,6 +6,7 @@ import com.scascanner.studycafe.web.studycafe.dto.RoomEditFormDto;
 import com.scascanner.studycafe.web.studycafe.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
