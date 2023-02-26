@@ -2,6 +2,7 @@ package com.scascanner.studycafe.domain.entity;
 
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
@@ -13,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Room {
 
@@ -27,10 +29,6 @@ public class Room {
 
     private Integer headCount;
     private Integer price;
-
-    public Long getId() {
-        return id;
-    }
 
     public void update(Integer headCount, Integer price) {
         this.headCount = headCount;
