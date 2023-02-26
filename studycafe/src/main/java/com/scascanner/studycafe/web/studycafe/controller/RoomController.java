@@ -62,12 +62,13 @@ public class RoomController {
         return roomDto;
     }
 
-    @GetMapping("/studycafe/{cafeId}/rooms/{roomId}/edit")
-    public RoomEditDto editRoomForm(@PathVariable String cafeId, @PathVariable Long roomId, Model model) {
+    @GetMapping("/studycafe/{cafeId}/room/{roomId}/edit")
+    public RoomEditFormDto editRoomForm(@PathVariable String cafeId, @PathVariable Long roomId, Model model) {
 
-        RoomEditDto roomEditDto = new RoomEditDto();
-        model.addAttribute("form", roomEditDto);
-        return roomEditDto;
+        RoomEditFormDto roomEditFormDto = new RoomEditFormDto();
+        model.addAttribute("form", roomEditFormDto);
+
+        return roomEditFormDto;
 
         // return 뷰 논리 이름
     }
@@ -79,10 +80,10 @@ public class RoomController {
      * @param roomId
      * @return
      */
-    @PostMapping("/studycafe/{cafeId}/rooms/{roomId}/edit")
-    public void edit(@ModelAttribute RoomEditDto roomEditDto, Model model, @PathVariable Long cafeId, @PathVariable Long roomId) {
+    @PostMapping("/studycafe/{cafeId}/room/{roomId}/edit")
+    public void edit(@Validated @RequestBody RoomEditFormDto roomEditFormDto, Model model, @PathVariable Long cafeId, @PathVariable Long roomId) {
 
-        roomService.updateRoom(roomId, roomEditDto);
+        roomService.updateRoom(roomId, roomEditFormDto);
 
         // 리다이렉트 ("redirect:/studycafe/{cafeId}/rooms")
     }
