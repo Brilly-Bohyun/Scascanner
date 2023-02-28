@@ -14,10 +14,10 @@ public class StudyCafeRepository {
     @PersistenceContext
     private EntityManager em;
 
-    public List<LocalTime> findStudyCafeOperationTime(Long studycafeId) {
+    public List<Object[]> findStudyCafeOperationTime(Long studyCafeId) {
 
         return em.createQuery("select s.openTime, s.closeTime from StudyCafe s where s.id = :id")
-                .setParameter("id", studycafeId)
+                .setParameter("id", studyCafeId)
                 .getResultList();
 
     }
