@@ -1,12 +1,15 @@
 package com.scascanner.studycafe.web.login.dto;
 
 import com.scascanner.studycafe.domain.entity.Owner;
-import lombok.*;
+
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OwnerDto {
 
