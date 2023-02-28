@@ -1,5 +1,6 @@
 package com.scascanner.studycafe.web.studycafe.dto;
 
+import com.scascanner.studycafe.domain.entity.StudyCafe;
 import com.scascanner.studycafe.web.login.dto.OwnerDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,4 +36,16 @@ public class StudyCafeAddFormDto {
     @NotBlank(message = "설명은 필수입니다.")
     @Size(max = 1000, message = "소개글은 최대 1000자까지 작성할 수 있습니다.")
     private String comment;
+
+    public StudyCafe toEntity() {
+        return StudyCafe.builder()
+                .owner(owner.toEntity())
+                .name(name)
+                .minUsingTime(minUsingTime)
+                .openTime(openTime)
+                .closeTime(closeTime)
+                .address(address)
+                .comment(comment)
+                .build();
+    }
 }
