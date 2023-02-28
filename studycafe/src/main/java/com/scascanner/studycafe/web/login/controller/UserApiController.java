@@ -4,18 +4,16 @@ import com.scascanner.studycafe.domain.entity.User;
 import com.scascanner.studycafe.web.login.dto.UserForm;
 import com.scascanner.studycafe.web.login.dto.UserInfoDto;
 import com.scascanner.studycafe.web.login.dto.UserLogIn;
-import com.scascanner.studycafe.web.login.dto.UserSavedDto;
 import com.scascanner.studycafe.web.login.exception.UserNotFoundException;
 import com.scascanner.studycafe.web.login.service.UserService;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @RestController
@@ -32,9 +30,6 @@ public class UserApiController {
                 .name(userForm.getName())
                 .joinDate(new Date()).build();
 
-        HttpHeaders header = new HttpHeaders();
-        header.setContentType(new MediaType("application","json", StandardCharsets.UTF_8));
-
         return new ResponseEntity<>(userSavedDto, HttpStatus.OK);
     }
 
@@ -49,9 +44,6 @@ public class UserApiController {
         Long updatedId = userService.partialUpdate(id, userForm);
         UserInfoDto updatedUserInfoDto = getUserInfoDto(id, userForm);
 
-        HttpHeaders header = new HttpHeaders();
-        header.setContentType(new MediaType("application","json", StandardCharsets.UTF_8));
-
         return new ResponseEntity<>(updatedUserInfoDto, HttpStatus.OK);
     }
 
@@ -62,9 +54,6 @@ public class UserApiController {
         if(user == null){
             throw new UserNotFoundException(String.format("ID[%s] is Not Found", id));
         }
-
-        HttpHeaders header = new HttpHeaders();
-        header.setContentType(new MediaType("application","json", StandardCharsets.UTF_8));
 
         return ResponseEntity.ok().body("Delete Success");
     }
@@ -79,5 +68,16 @@ public class UserApiController {
                 .birthday(userForm.getBirthday())
                 .build();
         return updatedUserInfoDto;
+    }
+
+    /**
+     * 회원 가입 성공 시 반환 DTO
+     */
+    @Builder
+    @Getter
+    static class UserSavedDto{
+        private Long id;
+        private String name;
+        private Date joinDate;
     }
 }
