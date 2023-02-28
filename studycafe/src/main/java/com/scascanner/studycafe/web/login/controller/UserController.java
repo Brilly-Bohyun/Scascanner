@@ -1,5 +1,7 @@
 package com.scascanner.studycafe.web.login.controller;
 
+import com.scascanner.studycafe.domain.entity.User;
+import com.scascanner.studycafe.web.login.SessionConst;
 import com.scascanner.studycafe.web.login.dto.UserForm;
 import com.scascanner.studycafe.web.login.dto.UserLogIn;
 import com.scascanner.studycafe.web.login.service.UserService;
@@ -11,6 +13,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 
@@ -43,16 +49,29 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@Valid UserLogIn userLogIn, BindingResult bindingResult){
+    public String login(@Valid UserLogIn userLogIn, BindingResult bindingResult, HttpServletRequest request){
         if(bindingResult.hasErrors()){
             return "login/loginForm";
         }
 
-        Long loginMember = userService.longIn(userLogIn);
+        User loginUser = userService.longIn(userLogIn);
 
-        if(loginMember == null){
+        if(loginUser == null){
             bindingResult.reject("loginFail", "아이디 또는 비밀번호가 일치하지 않습니다.");
             return "login/loginForm";
+        }
+
+        HttpSession session = request.getSession();
+        session.setAttribute(SessionConst.LOGIN_USER, loginUser);
+
+        return "redirect:/";
+    }
+
+    @PostMapping("/logout")
+    public String logout(HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+        if(session != null){
+            session.invalidate();
         }
 
         return "redirect:/";
