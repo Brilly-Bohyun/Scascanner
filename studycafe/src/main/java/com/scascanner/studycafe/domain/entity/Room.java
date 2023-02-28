@@ -19,7 +19,7 @@ import javax.persistence.ManyToOne;
 public class Room {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "room_id")
     private Long id;
 
