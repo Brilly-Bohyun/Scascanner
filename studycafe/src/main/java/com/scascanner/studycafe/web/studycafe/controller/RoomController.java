@@ -1,7 +1,7 @@
 package com.scascanner.studycafe.web.studycafe.controller;
 
 import com.scascanner.studycafe.domain.entity.Room;
-import com.scascanner.studycafe.web.studycafe.dto.RoomDto;
+import com.scascanner.studycafe.web.studycafe.dto.RoomViewDto;
 import com.scascanner.studycafe.web.studycafe.dto.RoomEditFormDto;
 import com.scascanner.studycafe.web.studycafe.service.RoomService;
 import lombok.RequiredArgsConstructor;
@@ -29,17 +29,10 @@ public class RoomController {
      * @return
      */
     @GetMapping("/studycafe/{cafeId}/room")
-    public List<RoomDto> rooms(Model model, @PathVariable Long cafeId) {
+    public List<RoomViewDto> rooms(Model model, @PathVariable Long cafeId) {
 
-        List<RoomDto> rooms = roomService.findAllInStudyCafe(cafeId).stream()
-                .map(r -> RoomDto
-                        .builder()
-                        .id(r.getId())
-                        .studyCafe(r.getStudyCafe())
-                        .headCount(r.getHeadCount())
-                        .price(r.getPrice())
-                        .build()
-                ).collect(Collectors.toList());
+        List<RoomViewDto> rooms = roomService.findAllInStudyCafe(cafeId).stream()
+                .map(RoomViewDto::of).collect(Collectors.toList());
 
         model.addAttribute("rooms", rooms);
 
@@ -47,20 +40,14 @@ public class RoomController {
     }
 
     @GetMapping("/studycafe/{cafeId}/room/{roomId}")
-    public RoomDto room(Model model, @PathVariable Long cafeId, @PathVariable Long roomId) {
+    public RoomViewDto room(Model model, @PathVariable Long cafeId, @PathVariable Long roomId) {
 
         Room room = roomService.findOneInStudyCafe(cafeId, roomId);
+        RoomViewDto roomViewDto = RoomViewDto.of(room);
 
-        RoomDto roomDto = RoomDto.builder()
-                .id(room.getId())
-                .studyCafe(room.getStudyCafe())
-                .headCount(room.getHeadCount())
-                .price(room.getPrice())
-                .build();
+        model.addAttribute("room", roomViewDto);
 
-        model.addAttribute("room", roomDto);
-
-        return roomDto;
+        return roomViewDto;
     }
 
     @GetMapping("/studycafe/{cafeId}/room/{roomId}/edit")
