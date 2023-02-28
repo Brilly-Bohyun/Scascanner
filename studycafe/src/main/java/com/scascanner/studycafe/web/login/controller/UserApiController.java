@@ -35,7 +35,7 @@ public class UserApiController {
 
     @PostMapping("/users/api/login")
     public ResponseEntity<?> login(@RequestBody UserLogIn userLogIn){
-            Long userId = userService.longIn(userLogIn);
+            userService.longIn(userLogIn);
 
             return ResponseEntity.ok().body("Login Succeeded");
     }

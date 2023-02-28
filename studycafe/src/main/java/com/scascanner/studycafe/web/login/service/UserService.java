@@ -44,10 +44,10 @@ public class UserService {
     }
 
     @Transactional
-    public Long longIn(UserLogIn userLogIn){
+    public User longIn(UserLogIn userLogIn){
         User user = findByEmail(userLogIn.getEmail());
         checkPassword(userLogIn.getPassword(), user.getPassword());
-        return user.getId();
+        return user;
     }
 
     @Transactional
