@@ -6,16 +6,16 @@ import com.scascanner.studycafe.web.login.dto.UserForm;
 import com.scascanner.studycafe.web.login.dto.UserLogIn;
 import com.scascanner.studycafe.web.login.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -23,6 +23,7 @@ import javax.validation.Valid;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/users")
+@Slf4j
 public class UserController {
 
     private final UserService userService;
@@ -34,8 +35,10 @@ public class UserController {
     }
 
     @PostMapping("/new")
-    public String create(@Valid UserForm userForm, BindingResult result){
-        if(result.hasErrors()){
+    public String create(@Valid UserForm userForm, BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            log.info("문제 발생");
+            log.info("errors = {}", bindingResult);
             return "users/createUserForm";
         }
         userService.join(userForm);
@@ -44,13 +47,15 @@ public class UserController {
 
     @GetMapping("/login")
     public String loginForm(Model model){
-        model.addAttribute("UserLogin", new UserLogIn());
+        model.addAttribute("userLogIn", new UserLogIn());
         return "login/loginForm";
     }
 
     @PostMapping("/login")
     public String login(@Valid UserLogIn userLogIn, BindingResult bindingResult, HttpServletRequest request){
         if(bindingResult.hasErrors()){
+            log.info("문제 발생");
+            log.info("errors = {}", bindingResult);
             return "login/loginForm";
         }
 

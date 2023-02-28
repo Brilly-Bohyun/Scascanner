@@ -15,6 +15,7 @@
       <label th:for="name">이메일</label>
       <input type="email" th:field="*{email}" class="form-control"
              placeholder="이메일을 입력하세요"
+             name="email" id="email"
              th:class="${#fields.hasErrors('email')}? 'form-control fieldError' : 'form-control'">
       <p th:if="${#fields.hasErrors('email')}"
          th:errors="*{email}">Incorrect date</p>
@@ -22,6 +23,7 @@
     <div class="form-group">
       <label th:for="name">비밀번호</label>
       <input type="password" th:field="*{password}" class="form-control"
+             name="password" id="password"
              placeholder="비밀번호를 입력하세요"
              th:class="${#fields.hasErrors('password')}? 'form-control fieldError' : 'form-control'">
       <p th:if="${#fields.hasErrors('password')}"
@@ -30,6 +32,7 @@
     <div class="form-group">
       <label th:for="name">이름</label>
       <input type="text" th:field="*{name}" class="form-control"
+             name="name" id="name"
              placeholder="이름을 입력하세요"
              th:class="${#fields.hasErrors('name')}? 'form-control fieldError' : 'form-control'">
       <p th:if="${#fields.hasErrors('name')}"
@@ -38,6 +41,7 @@
     <div class="form-group">
       <label th:for="name">닉네임</label>
       <input type="text" th:field="*{nickname}" class="form-control"
+             name="nickname" id="nickname"
              placeholder="닉네임을 입력하세요"
              th:class="${#fields.hasErrors('nickname')}? 'form-control fieldError' : 'form-control'">
       <p th:if="${#fields.hasErrors('nickname')}"
@@ -46,6 +50,7 @@
     <div class="form-group">
       <label th:for="name">생년월일</label>
       <input type="date" th:field="*{birthday}" class="form-control"
+             name="birthday" id="birthday"
              placeholder="생년월일을 입력하세요"
              th:class="${#fields.hasErrors('birthday')}? 'form-control fieldError' : 'form-control'">
       <p th:if="${#fields.hasErrors('birthday')}"
