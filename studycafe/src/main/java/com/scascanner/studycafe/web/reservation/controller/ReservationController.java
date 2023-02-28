@@ -7,7 +7,9 @@ import com.scascanner.studycafe.web.reservation.service.ReservationService;
 import com.scascanner.studycafe.web.studycafe.service.RoomService;
 import com.scascanner.studycafe.web.studycafe.service.StudyCafeService;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -27,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/reservation")
@@ -95,6 +98,7 @@ public class ReservationController {
      * 예약 조회 응답 DTO
      */
     @Builder
+    @Getter
     static class GetReservationResponse{
         private Date date;
         private List<ReservationTimeStatus> reservationTimeStatus;
@@ -104,6 +108,7 @@ public class ReservationController {
      * 넘겨줄 날짜 형식
      */
     @Builder
+    @Getter
     static class Date{
         private int year;
         private int month;
@@ -114,6 +119,7 @@ public class ReservationController {
      * 시간별 예약 가능 여부
      */
     @Builder
+    @Getter
     static class ReservationTimeStatus {
         private Integer start;
         private Integer end;
