@@ -40,4 +40,8 @@ public class ReservationService {
         reservationRepository.reserve(reservation);
     }
 
+    public List<Reservation> findByUserId(Long userId) {
+        return reservationRepository.findByUserId(userId);
+    }
+
 }
