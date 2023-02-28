@@ -1,22 +1,15 @@
 package com.scascanner.studycafe.web.login.dto;
 
 import com.scascanner.studycafe.domain.entity.Owner;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import javax.persistence.*;
 import java.time.LocalDate;
 
-@Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OwnerDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "owner_id")
     private Long id;
     private String email;
     private String password;
@@ -43,6 +36,16 @@ public class OwnerDto {
                         .name(owner.getName())
                         .birthday(owner.getBirthday())
                         .build();
+    }
+
+    public Owner toEntity() {
+        return Owner.builder()
+                .id(id)
+                .name(name)
+                .email(email)
+                .password(password)
+                .birthday(birthday)
+                .build();
     }
 
     @Override
