@@ -26,7 +26,7 @@ public class StudyCafe {
     @Column(name = "study_cafe_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "owner_id")
     private Owner owner;
 
