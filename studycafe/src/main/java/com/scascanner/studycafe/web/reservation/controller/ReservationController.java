@@ -2,6 +2,7 @@ package com.scascanner.studycafe.web.reservation.controller;
 
 import com.scascanner.studycafe.domain.entity.reservation.Reservation;
 import com.scascanner.studycafe.domain.entity.reservation.ReservationStatus;
+import com.scascanner.studycafe.domain.entity.User;
 import com.scascanner.studycafe.web.login.service.UserService;
 import com.scascanner.studycafe.web.reservation.service.ReservationService;
 import com.scascanner.studycafe.web.studycafe.service.RoomService;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -29,6 +31,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 
 
 @Slf4j
@@ -82,11 +85,11 @@ public class ReservationController {
                                      @RequestParam Long roomId,
                                      @RequestParam @DateTimeFormat(pattern = "kk:mm:ss") LocalTime startTime,
                                      @RequestParam @DateTimeFormat(pattern = "kk:mm:ss") LocalTime endTime,
-                                     @CookieValue(name = "userId", required = true) Long userId) {
+                                     @SessionAttribute(name = "loginUser") User user) {
 
         Reservation reservation = new Reservation(
                 studyCafeService.findById(studyCafeId),
-                userService.findById(userId),
+                userService.findById(user.getId()),
                 roomService.findById(roomId),
                 date, startTime, endTime, ReservationStatus.RESERVED);
         reservationService.reserve(reservation);
@@ -97,8 +100,8 @@ public class ReservationController {
     }
 
     @GetMapping("/details")
-    public List<ReservationDto> userReservation(@CookieValue(name = "userId") Long userId) {
-        List<Reservation> reservations = reservationService.findByUserId(userId);
+    public List<ReservationDto> userReservation( @SessionAttribute(name = "loginUser") User user) {
+        List<Reservation> reservations = reservationService.findByUserId(user.getId());
         List<ReservationDto> reservationDtos = new ArrayList<>();
         for (Reservation reservation : reservations) {
             reservationDtos.add(
