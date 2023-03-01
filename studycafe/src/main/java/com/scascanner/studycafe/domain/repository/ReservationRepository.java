@@ -25,6 +25,8 @@ public class ReservationRepository {
                 .getResultList();*/
         return em.createQuery("select r.startTime, r.endTime from Reservation r where r.date = :targetDate")
                 .setParameter("targetDate", targetDate)
+                .setParameter("studyCafeId", studyCafeId)
+                .setParameter("roomId", roomId)
                 .getResultList();
     }
     

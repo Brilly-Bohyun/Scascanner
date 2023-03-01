@@ -33,7 +33,7 @@ public class User {
     public String getPassword() {
         return password;
     }
-  
+
     @Builder
     public User(String email, String password, String nickname, String name, LocalDate birthday) {
         this.email = email;
