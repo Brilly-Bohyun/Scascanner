@@ -1,5 +1,7 @@
 package com.scascanner.studycafe.web.login.exception;
 
+import lombok.Builder;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -41,5 +43,16 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
                 .message(ex.getMessage())
                 .details(request.getDescription(false)).build();
         return exceptionResponse;
+    }
+
+    /**
+     * 예외 처리를 할 경우에 보낼 DTO
+     */
+    @Builder
+    @Getter
+    static class ExceptionResponse{
+        private LocalDateTime timestamp;
+        private String message;
+        private String details;
     }
 }

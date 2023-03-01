@@ -4,6 +4,8 @@ import com.scascanner.studycafe.domain.entity.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.validation.constraints.Email;
@@ -14,6 +16,7 @@ import java.time.LocalDate;
 
 @NoArgsConstructor
 @Getter
+@Setter
 public class UserForm {
     @NotEmpty(message = "사용자 이메일은 필수 입니다.")
     @Email
@@ -30,6 +33,7 @@ public class UserForm {
     private String name;
 
     @Past
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthday;
 
     @Builder
