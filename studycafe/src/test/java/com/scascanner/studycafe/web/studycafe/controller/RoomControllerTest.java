@@ -109,9 +109,9 @@ class RoomControllerTest {
 
         // then
         resultActions
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.headCount", is(10)).exists())
-                .andExpect(jsonPath("$.price", is(10000)).exists());
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/studycafe/1/room/1")
+                );
     }
 
     private List<Room> getRooms() {
