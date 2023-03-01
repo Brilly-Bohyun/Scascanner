@@ -2,7 +2,7 @@ package com.scascanner.studycafe.web.studycafe.service;
 
 import com.scascanner.studycafe.domain.entity.Room;
 import com.scascanner.studycafe.domain.repository.RoomRepository;
-import com.scascanner.studycafe.web.studycafe.dto.RoomEditFormDto;
+import com.scascanner.studycafe.web.studycafe.dto.RoomRequestEditForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,10 +17,10 @@ public class RoomService {
     private final RoomRepository roomRepository;
 
     @Transactional
-    public void updateRoom(Long roomId, RoomEditFormDto roomEditFormDto) {
+    public void updateRoom(Long roomId, RoomRequestEditForm roomRequestEditForm) {
 
         Room room = roomRepository.findById(roomId);
-        room.update(roomEditFormDto.getHeadCount(), roomEditFormDto.getPrice());
+        room.update(roomRequestEditForm.getHeadCount(), roomRequestEditForm.getPrice());
     }
 
     public Room findById(Long roomId) {

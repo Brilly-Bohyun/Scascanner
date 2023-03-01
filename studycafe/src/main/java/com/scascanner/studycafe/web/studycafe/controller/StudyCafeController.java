@@ -9,11 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,11 +17,12 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController // 테스트용
 @RequiredArgsConstructor
+@RequestMapping(value = "/studycafe")
 public class StudyCafeController {
 
     private final StudyCafeService studyCafeService;
 
-    @GetMapping("/studycafe/new")
+    @GetMapping("/new")
     public StudyCafeAddFormDto addForm(Model model) {
         StudyCafeAddFormDto studyCafeAddFormDto = new StudyCafeAddFormDto();
         model.addAttribute("form", studyCafeAddFormDto);
@@ -34,20 +31,13 @@ public class StudyCafeController {
 //        return "/studycafe/create";
     }
 
-    @PostMapping("/studycafe/new")
+    @PostMapping("/new")
     public StudyCafe add(@Validated @RequestBody StudyCafeAddFormDto studyCafeAddFormDto) {
         StudyCafe studyCafe = studyCafeAddFormDto.toEntity();
         studyCafeService.addStudyCafe(studyCafe);
 
         return studyCafe;
 //        return "/redirect:/";   // 스터디카페 등록 후 별도의 창을 띄울지는 나중에 결정
-    }
-
-    @PostMapping("/studycafe/{cafeId}/edit")
-    public StudyCafeEditFormDto edit(@Validated @RequestBody StudyCafeEditFormDto studyCafeEditFormDto, @PathVariable Long cafeId) {
-
-        studyCafeService.update(cafeId, studyCafeEditFormDto);
-        return studyCafeEditFormDto;
     }
 
     /**
@@ -57,7 +47,7 @@ public class StudyCafeController {
      * @param model 등록된 모든 스터디카페 정보를 담고있는 리스트를 담을 모델
      * @return 뷰 논리 이름
      */
-    @GetMapping("/studycafe")
+    @GetMapping
     public List<StudyCafeViewDto> studyCafes(Model model) {
         List<StudyCafeViewDto> studyCafeViewDtos = studyCafeService.findStudyCafes().stream().map(StudyCafeViewDto::of)
                 .collect(Collectors.toList());
@@ -66,7 +56,7 @@ public class StudyCafeController {
         return studyCafeViewDtos;
     }
 
-    @GetMapping("/studycafe/{cafeId}")
+    @GetMapping("/{cafeId}")
     public StudyCafeViewDto studyCafe(@PathVariable Long cafeId, Model model) {
 
         StudyCafe studyCafe = studyCafeService.findById(cafeId);
@@ -78,5 +68,12 @@ public class StudyCafeController {
 
         return studyCafeViewDto;
 //        return "/studycafe/" + cafeId;  // 이거 더 편하게 하는 방법이 있었는데 기억 안남...
+    }
+
+    @PatchMapping("/{cafeId}")
+    public StudyCafeEditFormDto edit(@Validated @RequestBody StudyCafeEditFormDto studyCafeEditFormDto, @PathVariable Long cafeId) {
+
+        studyCafeService.update(cafeId, studyCafeEditFormDto);
+        return studyCafeEditFormDto;
     }
 }
