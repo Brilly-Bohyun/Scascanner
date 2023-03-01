@@ -7,7 +7,9 @@ import com.scascanner.studycafe.web.reservation.service.ReservationService;
 import com.scascanner.studycafe.web.studycafe.service.RoomService;
 import com.scascanner.studycafe.web.studycafe.service.StudyCafeService;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -27,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/reservation")
@@ -77,7 +82,7 @@ public class ReservationController {
                                      @RequestParam Long roomId,
                                      @RequestParam @DateTimeFormat(pattern = "kk:mm:ss") LocalTime startTime,
                                      @RequestParam @DateTimeFormat(pattern = "kk:mm:ss") LocalTime endTime,
-                                     @CookieValue(name = "memberId", required = true) Long userId) {
+                                     @CookieValue(name = "userId", required = true) Long userId) {
 
         Reservation reservation = new Reservation(
                 studyCafeService.findById(studyCafeId),
@@ -86,15 +91,45 @@ public class ReservationController {
                 date, startTime, endTime, ReservationStatus.RESERVED);
         reservationService.reserve(reservation);
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setLocation(URI.create("/"));
+        httpHeaders.setLocation(URI.create("/reservation/details"));
 
         return new ResponseEntity<>(httpHeaders, HttpStatus.MOVED_PERMANENTLY); // "/"으로 redirect , 후에 예약 상세페이지를 만들면 예약 상세 페이지로 redirect하는 것으로 변경 !
+    }
+
+    @GetMapping("/details")
+    public List<ReservationDto> userReservation(@CookieValue(name = "userId") Long userId) {
+        List<Reservation> reservations = reservationService.findByUserId(userId);
+        List<ReservationDto> reservationDtos = new ArrayList<>();
+        for (Reservation reservation : reservations) {
+            reservationDtos.add(
+                    ReservationDto.builder()
+                            .studyCafeName(reservation.getStudyCafe().getName())
+                            .roomHeadCount(reservation.getRoom().getHeadCount())
+                            .date(reservation.getDate())
+                            .startTime(reservation.getStartTime())
+                            .endTime(reservation.getEndTime())
+                            .reservationStatus(reservation.getReservationStatus())
+                            .build());
+        }
+        return reservationDtos;
+    }
+
+    @Getter
+    @Builder
+    static class ReservationDto{
+        private String studyCafeName;
+        private Integer roomHeadCount;
+        private LocalDate date;
+        private LocalTime startTime;
+        private LocalTime endTime;
+        private ReservationStatus reservationStatus;
     }
 
     /**
      * 예약 조회 응답 DTO
      */
     @Builder
+    @Getter
     static class GetReservationResponse{
         private Date date;
         private List<ReservationTimeStatus> reservationTimeStatus;
@@ -104,6 +139,7 @@ public class ReservationController {
      * 넘겨줄 날짜 형식
      */
     @Builder
+    @Getter
     static class Date{
         private int year;
         private int month;
@@ -114,6 +150,7 @@ public class ReservationController {
      * 시간별 예약 가능 여부
      */
     @Builder
+    @Getter
     static class ReservationTimeStatus {
         private Integer start;
         private Integer end;

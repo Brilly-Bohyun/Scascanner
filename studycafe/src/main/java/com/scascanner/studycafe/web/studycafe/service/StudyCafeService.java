@@ -4,6 +4,7 @@ import com.scascanner.studycafe.domain.entity.StudyCafe;
 import com.scascanner.studycafe.domain.repository.StudyCafeRepository;
 import com.scascanner.studycafe.web.studycafe.dto.StudyCafeEditFormDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-
+@Slf4j
 @Service
 @Transactional(readOnly = true) // 읽기 전용이면 영속성 컨텍스트가 스냅샷을 보관하지 않아 메모리 사용량을 최적화
 @RequiredArgsConstructor
@@ -21,10 +22,10 @@ public class StudyCafeService {
     private final StudyCafeRepository studyCafeRepository;
     private Map<String, LocalTime> studyCafeOperationTime = new ConcurrentHashMap<>();
 
-    public Map<String, LocalTime> findStudyCafeOperationTime(Long studycafeId) {
-        List<LocalTime> studyCafeOperationTimeList = studyCafeRepository.findStudyCafeOperationTime(studycafeId);
-        studyCafeOperationTime.put("openTime", studyCafeOperationTimeList.get(0));
-        studyCafeOperationTime.put("closeTime", studyCafeOperationTimeList.get(1));
+    public Map<String, LocalTime> findStudyCafeOperationTime(Long studyCafeId) {
+        List<Object[]> studyCafeOperationTimeList = studyCafeRepository.findStudyCafeOperationTime(studyCafeId);
+        studyCafeOperationTime.put("openTime", (LocalTime) studyCafeOperationTimeList.get(0)[0]);
+        studyCafeOperationTime.put("closeTime", (LocalTime) studyCafeOperationTimeList.get(0)[1]);
         return studyCafeOperationTime;
     }
 
