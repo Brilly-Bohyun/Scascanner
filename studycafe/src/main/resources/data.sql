@@ -37,8 +37,9 @@ VALUES (2, 4, 4000, 1);
 INSERT INTO room (room_id, head_count, price, study_cafe_id)
 VALUES (3, 6, 6000, 1);
 
-INSERT INTO reservation (reservation_id, end_time, reservation_status, start_time, room_id, study_cafe_id, user_id)
-VALUES (1, '2023-02-28 16:00:00', 'RESERVED', '2023-02-28 14:00:00', 1, 1, 1);
-
-INSERT INTO reservation (reservation_id, end_time, reservation_status, start_time, room_id, study_cafe_id, user_id)
-VALUES (2, '2023-03-01 18:00:00', 'RESERVED', '2023-03-01 15:00:00', 5, 2, 2);
+INSERT INTO reservation (reservation_id, study_cafe_id, user_id, room_id, date, start_time, end_time,
+                         reservation_status)
+VALUES (1, 1, 1, 1, '2023-02-28', '14:00:00', '16:00:00', 'RESERVED');
+INSERT INTO reservation (reservation_id, study_cafe_id, user_id, room_id, date, start_time, end_time,
+                         reservation_status)
+VALUES (2, 1, 1, 2, '2023-02-28', '14:00:00', '16:00:00', 'RESERVED');
