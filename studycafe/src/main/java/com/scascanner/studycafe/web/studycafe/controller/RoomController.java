@@ -2,13 +2,17 @@ package com.scascanner.studycafe.web.studycafe.controller;
 
 import com.scascanner.studycafe.domain.entity.Room;
 import com.scascanner.studycafe.web.studycafe.dto.RoomViewDto;
-import com.scascanner.studycafe.web.studycafe.dto.RoomEditFormDto;
+import com.scascanner.studycafe.web.studycafe.dto.RoomRequestEditForm;
 import com.scascanner.studycafe.web.studycafe.service.RoomService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,28 +55,29 @@ public class RoomController {
     }
 
     @GetMapping("/studycafe/{cafeId}/room/{roomId}/edit")
-    public RoomEditFormDto editRoomForm(@PathVariable String cafeId, @PathVariable Long roomId, Model model) {
+    public RoomRequestEditForm editRoomForm(@PathVariable String cafeId, @PathVariable Long roomId, Model model) {
 
-        RoomEditFormDto roomEditFormDto = new RoomEditFormDto();
-        model.addAttribute("form", roomEditFormDto);
+        RoomRequestEditForm roomRequestEditForm = new RoomRequestEditForm();
+        model.addAttribute("form", roomRequestEditForm);
 
-        return roomEditFormDto;
-
+        return roomRequestEditForm;
         // return 뷰 논리 이름
     }
 
     /**
      * 룸 수정
-     * @param model
      * @param cafeId
      * @param roomId
      * @return
      */
     @PostMapping("/studycafe/{cafeId}/room/{roomId}/edit")
-    public void edit(@Validated @RequestBody RoomEditFormDto roomEditFormDto, Model model, @PathVariable Long cafeId, @PathVariable Long roomId) {
+    public ResponseEntity<?> edit(@Validated @RequestBody RoomRequestEditForm roomRequestEditForm, @PathVariable Long cafeId, @PathVariable Long roomId) {
 
-        roomService.updateRoom(roomId, roomEditFormDto);
+        roomService.updateRoom(roomId, roomRequestEditForm);
 
-        // 리다이렉트 ("redirect:/studycafe/{cafeId}/rooms")
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setLocation(URI.create("/studycafe/" + cafeId + "/room/" + roomId));
+
+        return new ResponseEntity<>(httpHeaders, HttpStatus.MOVED_PERMANENTLY);
     }
 }
