@@ -15,12 +15,10 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.assertj.core.internal.bytebuddy.matcher.ElementMatchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -92,7 +90,7 @@ class RoomControllerTest {
     }
 
     @Test
-    @DisplayName("[API][POST] 룸 정보 수정")
+    @DisplayName("[API][PATCH] 룸 정보 수정")
     public void 룸_정보_수정() throws Exception {
 
         // given
@@ -100,7 +98,7 @@ class RoomControllerTest {
 
         // when
         ResultActions resultActions = mockMvc.perform(
-                post("/studycafe/1/room/1/edit")
+                patch("/studycafe/1/room/1")
                         .with(csrf())   // Spring Security Test에서 403오류는 csrf때문에 발생한다고 한다.
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
