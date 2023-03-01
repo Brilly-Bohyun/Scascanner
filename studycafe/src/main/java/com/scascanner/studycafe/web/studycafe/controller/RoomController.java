@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequiredArgsConstructor
+@RequestMapping(value = "/studycafe/{cafeId}/room")
 public class RoomController {
 
     private final RoomService roomService;
@@ -32,7 +33,7 @@ public class RoomController {
      * @param cafeId
      * @return
      */
-    @GetMapping("/studycafe/{cafeId}/room")
+    @GetMapping
     public List<RoomViewDto> rooms(Model model, @PathVariable Long cafeId) {
 
         List<RoomViewDto> rooms = roomService.findAllInStudyCafe(cafeId).stream()
@@ -43,7 +44,7 @@ public class RoomController {
         return rooms;
     }
 
-    @GetMapping("/studycafe/{cafeId}/room/{roomId}")
+    @GetMapping("/{roomId}")
     public RoomViewDto room(Model model, @PathVariable Long cafeId, @PathVariable Long roomId) {
 
         Room room = roomService.findOneInStudyCafe(cafeId, roomId);
@@ -54,7 +55,8 @@ public class RoomController {
         return roomViewDto;
     }
 
-    @GetMapping("/studycafe/{cafeId}/room/{roomId}/edit")
+    /*
+    @GetMapping("/studycafe/{cafeId}/room/{roomId}/")
     public RoomRequestEditForm editRoomForm(@PathVariable String cafeId, @PathVariable Long roomId, Model model) {
 
         RoomRequestEditForm roomRequestEditForm = new RoomRequestEditForm();
@@ -63,6 +65,7 @@ public class RoomController {
         return roomRequestEditForm;
         // return 뷰 논리 이름
     }
+     */
 
     /**
      * 룸 수정
@@ -70,7 +73,7 @@ public class RoomController {
      * @param roomId
      * @return
      */
-    @PostMapping("/studycafe/{cafeId}/room/{roomId}/edit")
+    @PatchMapping("/{roomId}")
     public ResponseEntity<?> edit(@Validated @RequestBody RoomRequestEditForm roomRequestEditForm, @PathVariable Long cafeId, @PathVariable Long roomId) {
 
         roomService.updateRoom(roomId, roomRequestEditForm);
