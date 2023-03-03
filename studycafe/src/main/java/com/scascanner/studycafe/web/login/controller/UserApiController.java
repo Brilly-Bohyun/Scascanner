@@ -18,11 +18,12 @@ import java.util.Date;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/users")
 public class UserApiController {
 
     private final UserService userService;
 
-    @PostMapping("/users")
+    @PostMapping
     public ResponseEntity<UserSavedDto> saveUser(@RequestBody @Valid UserForm userForm){
         Long id = userService.join(userForm);
         UserSavedDto userSavedDto = UserSavedDto.builder()
@@ -33,14 +34,14 @@ public class UserApiController {
         return new ResponseEntity<>(userSavedDto, HttpStatus.OK);
     }
 
-    @PostMapping("/users/api/login")
+    @PostMapping("/api/login")
     public ResponseEntity<?> login(@RequestBody UserLogIn userLogIn){
             userService.longIn(userLogIn);
 
             return ResponseEntity.ok().body("Login Succeeded");
     }
 
-    @PatchMapping("/users/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<UserInfoDto> partialUpdate(@PathVariable Long id, @RequestBody @Valid UserForm userForm){
         Long updatedId = userService.partialUpdate(id, userForm);
         UserInfoDto updatedUserInfoDto = getUserInfoDto(id, userForm);
@@ -48,7 +49,7 @@ public class UserApiController {
         return new ResponseEntity<>(updatedUserInfoDto, HttpStatus.OK);
     }
 
-    @DeleteMapping("/users/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id){
         User user = userService.deleteById(id);
 
