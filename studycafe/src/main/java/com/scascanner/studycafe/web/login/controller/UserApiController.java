@@ -38,7 +38,7 @@ public class UserApiController {
     public ResponseEntity<?> login(@RequestBody UserLogIn userLogIn){
             userService.longIn(userLogIn);
 
-            return ResponseEntity.ok().body("Login Succeeded");
+        return ResponseEntity.ok().body("Login Succeeded");
     }
 
     @PatchMapping("/{id}")
