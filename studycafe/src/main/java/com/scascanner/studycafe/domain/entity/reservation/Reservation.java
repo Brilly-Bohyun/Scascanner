@@ -4,6 +4,7 @@ import com.scascanner.studycafe.domain.entity.Room;
 import com.scascanner.studycafe.domain.entity.StudyCafe;
 import com.scascanner.studycafe.domain.entity.User;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import javax.persistence.Column;
@@ -47,6 +48,7 @@ public class Reservation {
     @Enumerated(value = EnumType.STRING)
     private ReservationStatus reservationStatus;
 
+    @Builder
     public Reservation(StudyCafe studyCafe, User user, Room room, LocalDate date, LocalTime startTime, LocalTime endTime, ReservationStatus reservationStatus) {
         this.studyCafe = studyCafe;
         this.user = user;
