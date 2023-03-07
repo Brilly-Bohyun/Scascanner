@@ -45,4 +45,8 @@ public class ReservationService {
         return reservationRepository.findByUserId(userId);
     }
 
+    public void cancelReservation(Long reservationId) {
+        Reservation reservation = reservationRepository.findByReservationId(reservationId);
+        reservation.cancel();
+    }
 }
