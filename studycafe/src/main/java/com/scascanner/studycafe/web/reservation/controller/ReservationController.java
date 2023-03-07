@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -117,9 +118,17 @@ public class ReservationController {
         return reservationDtos;
     }
 
+    @PostMapping("/cancel/{reservationId}") //userId가 포함되어 있어야 하는가 .. ?
+    public ResponseEntity<?> cancelReservation(@PathVariable Long reservationId) {
+        reservationService.cancelReservation(reservationId);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setLocation(URI.create("/reservation/details"));
+        return new ResponseEntity<>(httpHeaders, HttpStatus.MOVED_PERMANENTLY); // "/"으로 redirect , 후에 예약 상세페이지를 만들면 예약 상세 페이지로 redirect하는 것으로 변경 !
+    }
+
     @Getter
     @Builder
-    static class ReservationDto{
+    static class ReservationDto {
         private String studyCafeName;
         private Integer roomHeadCount;
         private LocalDate date;
