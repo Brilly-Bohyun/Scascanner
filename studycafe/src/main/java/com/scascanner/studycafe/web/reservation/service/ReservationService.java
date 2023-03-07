@@ -5,6 +5,8 @@ import com.scascanner.studycafe.domain.repository.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -25,10 +27,9 @@ public class ReservationService {
         for (int i = openTime.getHour(); i < closeTime.getHour(); i++) {
             reservationTimes.put(i, true);
         }
-
         for (Object[] localDateTimes : allPossibleReservation) {
-            LocalTime reservation_start = (LocalTime) localDateTimes[0];
-            LocalTime reservation_end = (LocalTime) localDateTimes[1];
+            LocalTime reservation_start = ((Time) localDateTimes[0]).toLocalTime();
+            LocalTime reservation_end = ((Time) localDateTimes[1]).toLocalTime();
             for (int i = reservation_start.getHour(); i < reservation_end.getHour(); i++) {
                 reservationTimes.put(i, false);
             }
