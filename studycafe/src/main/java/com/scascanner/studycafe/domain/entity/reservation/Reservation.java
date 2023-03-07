@@ -58,4 +58,8 @@ public class Reservation {
         this.endTime = endTime;
         this.reservationStatus = reservationStatus;
     }
+
+    public void cancel(){
+        this.reservationStatus = ReservationStatus.CANCELED;
+    }
 }
