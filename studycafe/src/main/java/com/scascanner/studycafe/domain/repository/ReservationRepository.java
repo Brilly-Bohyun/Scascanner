@@ -38,4 +38,8 @@ public class ReservationRepository {
                 .getResultList();
     }
 
+    public Reservation findByReservationId(Long reservationId) {
+        return em.find(Reservation.class, reservationId);
+    }
+
 }
