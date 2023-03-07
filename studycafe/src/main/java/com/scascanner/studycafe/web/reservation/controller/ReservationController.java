@@ -118,7 +118,7 @@ public class ReservationController {
         return reservationDtos;
     }
 
-    @PostMapping("/cancel/{reservationId}") //userId가 포함되어 있어야 하는가 .. ?
+    @PostMapping("/details/{reservationId}/cancel") //userId가 포함되어 있어야 하는가 .. ?
     public ResponseEntity<?> cancelReservation(@PathVariable Long reservationId) {
         reservationService.cancelReservation(reservationId);
         HttpHeaders httpHeaders = new HttpHeaders();
