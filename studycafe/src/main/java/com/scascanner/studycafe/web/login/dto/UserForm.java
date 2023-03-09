@@ -13,6 +13,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.Collections;
 
 @NoArgsConstructor
 @Getter
@@ -52,6 +53,7 @@ public class UserForm {
                 .nickname(nickname)
                 .name(name)
                 .birthday(birthday)
+                .roles(Collections.singletonList("ROLE_USER"))
                 .build();
     }
 }
