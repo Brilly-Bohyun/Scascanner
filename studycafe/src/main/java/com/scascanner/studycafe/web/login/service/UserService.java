@@ -6,6 +6,7 @@ import com.scascanner.studycafe.web.login.dto.UserForm;
 import com.scascanner.studycafe.web.login.dto.UserLogIn;
 import com.scascanner.studycafe.web.login.exception.UnMatchedPasswordException;
 import com.scascanner.studycafe.web.login.exception.UserNotFoundException;
+import com.scascanner.studycafe.web.login.security.token.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
     public Long join(UserForm userForm){
@@ -38,16 +40,16 @@ public class UserService {
                 .orElseThrow(()-> new UserNotFoundException(String.format("There is no Id : %s", userId)));
     }
 
-    public User findByEmail(String email){
-        return userRepository.findByEmail(email)
+    public User findByUserId(String email){
+        return userRepository.findByUserId(email)
                 .orElseThrow(() -> new UserNotFoundException(String.format("There is no email : %s, You need to SignUp", email)));
     }
 
     @Transactional
-    public User longIn(UserLogIn userLogIn){
-        User user = findByEmail(userLogIn.getEmail());
+    public String longIn(UserLogIn userLogIn){
+        User user = findByUserId(userLogIn.getEmail());
         checkPassword(userLogIn.getPassword(), user.getPassword());
-        return user;
+        return jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
     }
 
     @Transactional
