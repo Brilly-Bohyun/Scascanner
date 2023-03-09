@@ -1,7 +1,5 @@
 package com.scascanner.studycafe.web.login.controller;
 
-import com.scascanner.studycafe.domain.entity.User;
-import com.scascanner.studycafe.web.login.SessionConst;
 import com.scascanner.studycafe.web.login.dto.UserForm;
 import com.scascanner.studycafe.web.login.dto.UserLogIn;
 import com.scascanner.studycafe.web.login.service.UserService;
@@ -58,15 +56,12 @@ public class UserController {
             return "login/loginForm";
         }
 
-        User loginUser = userService.longIn(userLogIn);
+        String loginUser = userService.longIn(userLogIn);
 
         if(loginUser == null){
             bindingResult.reject("loginFail", "아이디 또는 비밀번호가 일치하지 않습니다.");
             return "login/loginForm";
         }
-
-        HttpSession session = request.getSession();
-        session.setAttribute(SessionConst.LOGIN_USER, loginUser);
 
         return "redirect:/";
     }

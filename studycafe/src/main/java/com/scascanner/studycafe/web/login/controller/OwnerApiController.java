@@ -33,7 +33,7 @@ public class OwnerApiController {
 
     @PostMapping("/api/login")
     public ResponseEntity<?> login(@RequestBody OwnerLogIn ownerLogIn){
-        ownerService.longIn(ownerLogIn);
+        Owner owner = ownerService.longIn(ownerLogIn);
 
         return ResponseEntity.ok().body("Login Succeeded");
     }
