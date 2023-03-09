@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,6 +23,11 @@ import java.util.Date;
 public class UserApiController {
 
     private final UserService userService;
+
+    @GetMapping
+    public List<User> findAllUser(){
+        return userService.findAllUsers();
+    }
 
     @PostMapping
     public ResponseEntity<UserSavedDto> saveUser(@RequestBody @Valid UserForm userForm){
@@ -36,9 +42,9 @@ public class UserApiController {
 
     @PostMapping("/api/login")
     public ResponseEntity<?> login(@RequestBody UserLogIn userLogIn){
-            userService.longIn(userLogIn);
+        String userToken = userService.longIn(userLogIn);
 
-        return ResponseEntity.ok().body("Login Succeeded");
+        return ResponseEntity.ok().body("UserLogin Succeeded, userToken is" + userToken);
     }
 
     @PatchMapping("/{id}")
