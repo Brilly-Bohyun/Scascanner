@@ -53,6 +53,25 @@ public class ReservationService {
         reservationRepository.findByReservationId(reservationId).cancel();
     }
 
+
+    public Map<Integer, Boolean> reservationTimeStatusPerMonth(int year, int month, Long studyCafeId, Long roomId) {
+        int lastDay = getLastDay(year, month);
+
+        Map<Integer, Boolean> reservationTimeStatusPerMonth = new ConcurrentHashMap<>();
+        for (int i = 1; i <= lastDay; i++) {
+            reservationTimeStatusPerMonth.put(i, true);
+            Map<Integer, Boolean> reservationTimeStatusPerDay = reservationTimeStatus(LocalDate.of(year, month, i), studyCafeId, roomId);
+            for (Integer time : reservationTimeStatusPerDay.keySet()) {
+                if(!reservationTimeStatusPerDay.get(time)){
+                    reservationTimeStatusPerMonth.put(i, false);
+                    break;
+                }
+            }
+        }
+
+        return reservationTimeStatusPerMonth;
+    }
+
     public int getLastDay(int year, int month) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month - 1, 1);
