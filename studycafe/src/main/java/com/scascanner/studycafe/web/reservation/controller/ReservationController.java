@@ -126,6 +126,18 @@ public class ReservationController {
 
     @Getter
     @Builder
+    static class MonthReservationResponse {
+        private String month;
+        private List<DayReservationStatus> dayReservationStatus;
+    }
+
+    static class DayReservationStatus { //날짜별 예약 가능 여부
+        private String day;
+        private boolean reservationStatus;
+    }
+
+    @Getter
+    @Builder
     static class ReservationDto {
         private String studyCafeName;
         private Integer roomHeadCount;
