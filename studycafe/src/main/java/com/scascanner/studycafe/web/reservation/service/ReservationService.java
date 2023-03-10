@@ -2,6 +2,8 @@ package com.scascanner.studycafe.web.reservation.service;
 
 import com.scascanner.studycafe.domain.entity.reservation.Reservation;
 import com.scascanner.studycafe.domain.repository.ReservationRepository;
+import com.scascanner.studycafe.domain.repository.StudyCafeRepository;
+import com.scascanner.studycafe.web.studycafe.service.StudyCafeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,18 +21,19 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final StudyCafeService studyCafeService;
+
     private Map<Integer, Boolean> reservationTimes = new ConcurrentHashMap<>();
 
-    public Map<Integer, Boolean> reservationTimeStatus(LocalDate targetDate, LocalTime openTime, LocalTime closeTime, Long studyCafeId, Long roomId) {
-
-        List<Object[]> allPossibleReservation = reservationRepository.findAllImpossibleReservation(targetDate, studyCafeId, roomId);
-        for (int i = openTime.getHour(); i < closeTime.getHour(); i++) {
+    public Map<Integer, Boolean> reservationTimeStatus(LocalDate targetDate, Long studyCafeId, Long roomId) {
+        Map<String, LocalTime> operationTime = studyCafeService.findStudyCafeOperationTime(studyCafeId);
+        for (int i = operationTime.get("openTime").getHour(); i < operationTime.get("closeTime").getHour(); i++) {
             reservationTimes.put(i, true);
         }
+
+        List<Object[]> allPossibleReservation = reservationRepository.findAllImpossibleReservation(targetDate, studyCafeId, roomId);
         for (Object[] localDateTimes : allPossibleReservation) {
-            LocalTime reservation_start = ((Time) localDateTimes[0]).toLocalTime();
-            LocalTime reservation_end = ((Time) localDateTimes[1]).toLocalTime();
-            for (int i = reservation_start.getHour(); i < reservation_end.getHour(); i++) {
+            for (int i = ((Time) localDateTimes[0]).toLocalTime().getHour(); i < ((Time) localDateTimes[1]).toLocalTime().getHour(); i++) {
                 reservationTimes.put(i, false);
             }
         }
@@ -46,7 +49,7 @@ public class ReservationService {
     }
 
     public void cancelReservation(Long reservationId) {
-        Reservation reservation = reservationRepository.findByReservationId(reservationId);
-        reservation.cancel();
+        reservationRepository.findByReservationId(reservationId).cancel();
     }
+
 }

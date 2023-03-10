@@ -48,11 +48,7 @@ public class ReservationController {
                                                              @PathVariable Long studyCafeId,
                                                              @PathVariable Long roomId) {
 
-        Map<String, LocalTime> studyCafeOperationTime = studyCafeService.findStudyCafeOperationTime(studyCafeId);
-        Map<Integer, Boolean> reservationTimeStatus = reservationService.reservationTimeStatus(date,
-                studyCafeOperationTime.get("openTime"),
-                studyCafeOperationTime.get("closeTime"),
-                studyCafeId, roomId);
+        Map<Integer, Boolean> reservationTimeStatus = reservationService.reservationTimeStatus(date, studyCafeId, roomId);
 
         List<ReservationTimeStatus> reservationTimeStatusList = new ArrayList<>();
 
