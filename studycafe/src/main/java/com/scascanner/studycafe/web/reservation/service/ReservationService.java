@@ -56,20 +56,22 @@ public class ReservationService {
 
     public Map<Integer, Boolean> reservationTimeStatusPerMonth(int year, int month, Long studyCafeId, Long roomId) {
         int lastDay = getLastDay(year, month);
-
         Map<Integer, Boolean> reservationTimeStatusPerMonth = new ConcurrentHashMap<>();
         for (int i = 1; i <= lastDay; i++) {
             reservationTimeStatusPerMonth.put(i, true);
             Map<Integer, Boolean> reservationTimeStatusPerDay = reservationTimeStatus(LocalDate.of(year, month, i), studyCafeId, roomId);
-            for (Integer time : reservationTimeStatusPerDay.keySet()) {
-                if(!reservationTimeStatusPerDay.get(time)){
-                    reservationTimeStatusPerMonth.put(i, false);
-                    break;
-                }
+            makeResultOfReservationStatus(reservationTimeStatusPerMonth, i, reservationTimeStatusPerDay);
+        }
+        return reservationTimeStatusPerMonth;
+    }
+
+    private void makeResultOfReservationStatus(Map<Integer, Boolean> reservationTimeStatusPerMonth, int index, Map<Integer, Boolean> reservationTimeStatusPerDay) {
+        for (Integer time : reservationTimeStatusPerDay.keySet()) {
+            if(!reservationTimeStatusPerDay.get(time)){
+                reservationTimeStatusPerMonth.put(index, false);
+                break;
             }
         }
-
-        return reservationTimeStatusPerMonth;
     }
 
     public int getLastDay(int year, int month) {
