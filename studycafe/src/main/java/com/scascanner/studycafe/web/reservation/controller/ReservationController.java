@@ -4,8 +4,6 @@ import com.scascanner.studycafe.domain.entity.reservation.Reservation;
 import com.scascanner.studycafe.domain.entity.reservation.ReservationStatus;
 import com.scascanner.studycafe.domain.entity.User;
 import com.scascanner.studycafe.web.login.service.UserService;
-import com.scascanner.studycafe.web.reservation.dto.DayReservationStatus;
-import com.scascanner.studycafe.web.reservation.dto.MonthReservationResponse;
 import com.scascanner.studycafe.web.reservation.dto.ReservationResponse;
 import com.scascanner.studycafe.web.reservation.dto.ReservationTimeStatus;
 import com.scascanner.studycafe.web.reservation.dto.ReservationTimeStatusResponse;
@@ -100,14 +98,16 @@ public class ReservationController {
         return new ResponseEntity<>(httpHeaders, HttpStatus.MOVED_PERMANENTLY); // "/"으로 redirect , 후에 예약 상세페이지를 만들면 예약 상세 페이지로 redirect하는 것으로 변경 !
     }
 
-    @GetMapping("/{studyCafeId}/{roomId}")
-    public MonthReservationResponse reservationStatusPerMonth(@PathVariable Long studyCafeId, @PathVariable Long roomId, @RequestParam @DateTimeFormat(pattern = "yyyy-MM") LocalDate date) {
-        Map<Integer, Boolean> reservationTimeStatusPerMonth = reservationService.reservationTimeStatusPerMonth(date.getYear(), date.getMonthValue(), studyCafeId, roomId);
-        List<DayReservationStatus> dayReservationStatuses = new ArrayList<>();
-        reservationTimeStatusPerMonth.entrySet().stream()
-                .forEach(entry -> dayReservationStatuses.add(DayReservationStatus.of(entry.getKey(), reservationTimeStatusPerMonth.get(entry.getKey()))));
-        return MonthReservationResponse.of(date.getMonthValue(), dayReservationStatuses);
+    @Getter
+    @Builder
+    static class MonthReservationResponse {
+        private String month;
+        private List<DayReservationStatus> dayReservationStatus;
     }
 
+    static class DayReservationStatus { //날짜별 예약 가능 여부
+        private String day;
+        private boolean reservationStatus;
+    }
 
 }
