@@ -4,6 +4,9 @@ import com.scascanner.studycafe.domain.entity.reservation.Reservation;
 import com.scascanner.studycafe.domain.entity.reservation.ReservationStatus;
 import com.scascanner.studycafe.domain.entity.User;
 import com.scascanner.studycafe.web.login.service.UserService;
+import com.scascanner.studycafe.web.reservation.dto.ReservationResponse;
+import com.scascanner.studycafe.web.reservation.dto.ReservationTimeStatus;
+import com.scascanner.studycafe.web.reservation.dto.ReservationTimeStatusResponse;
 import com.scascanner.studycafe.web.reservation.service.ReservationService;
 import com.scascanner.studycafe.web.studycafe.service.RoomService;
 import com.scascanner.studycafe.web.studycafe.service.StudyCafeService;
@@ -44,34 +47,17 @@ public class ReservationController {
     private final RoomService roomService;
 
     @GetMapping("/{studyCafeId}/{roomId}")//date가 2023-02-11의 형태로 올 경우
-    public ReservationResponse impossibleReservationTimeList(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
-                                                             @PathVariable Long studyCafeId,
-                                                             @PathVariable Long roomId) {
+    public ReservationTimeStatusResponse impossibleReservationTimeList(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
+                                                                       @PathVariable Long studyCafeId,
+                                                                       @PathVariable Long roomId) {
 
         Map<Integer, Boolean> reservationTimeStatus = reservationService.reservationTimeStatus(date, studyCafeId, roomId);
 
         List<ReservationTimeStatus> reservationTimeStatusList = new ArrayList<>();
+        reservationTimeStatus.entrySet().stream().
+                forEach(entry -> reservationTimeStatusList.add(ReservationTimeStatus.of(entry.getKey(), reservationTimeStatus.get(entry.getKey()))));
 
-        for (Integer key : reservationTimeStatus.keySet()) {
-            reservationTimeStatusList.add(
-                    ReservationTimeStatus.builder()
-                            .start(key)
-                            .end(key+1)
-                            .reservationStatus(reservationTimeStatus.get(key))
-                            .build());
-
-        }
-
-        Date targetDate = Date.builder()
-                .year(date.getYear())
-                .month(date.getMonthValue())
-                .day(date.getDayOfMonth())
-                .build();
-
-        return ReservationResponse.builder()
-                .reservationTimeStatus(reservationTimeStatusList)
-                .date(targetDate)
-                .build();
+        return ReservationTimeStatusResponse.of(reservationTimeStatusList, date);
     }
 
     @PostMapping("/{studyCafeId}/{roomId}")
@@ -95,21 +81,13 @@ public class ReservationController {
     }
 
     @GetMapping("/details")
-    public List<ReservationDto> userReservation( @SessionAttribute(name = "loginUser") User user) {
+    public List<ReservationResponse> userReservation(@SessionAttribute(name = "loginUser") User user) {
         List<Reservation> reservations = reservationService.findByUserId(user.getId());
-        List<ReservationDto> reservationDtos = new ArrayList<>();
+        List<ReservationResponse> responses = new ArrayList<>();
         for (Reservation reservation : reservations) {
-            reservationDtos.add(
-                    ReservationDto.builder()
-                            .studyCafeName(reservation.getStudyCafe().getName())
-                            .roomHeadCount(reservation.getRoom().getHeadCount())
-                            .date(reservation.getDate())
-                            .startTime(reservation.getStartTime())
-                            .endTime(reservation.getEndTime())
-                            .reservationStatus(reservation.getReservationStatus())
-                            .build());
+            responses.add(ReservationResponse.from(reservation));
         }
-        return reservationDtos;
+        return responses;
     }
 
     @PostMapping("/details/{reservationId}/cancel") //userId가 포함되어 있어야 하는가 .. ?
@@ -129,49 +107,6 @@ public class ReservationController {
 
     static class DayReservationStatus { //날짜별 예약 가능 여부
         private String day;
-        private boolean reservationStatus;
-    }
-
-    @Getter
-    @Builder
-    static class ReservationDto {
-        private String studyCafeName;
-        private Integer roomHeadCount;
-        private LocalDate date;
-        private LocalTime startTime;
-        private LocalTime endTime;
-        private ReservationStatus reservationStatus;
-    }
-
-    /**
-     * 예약 조회 응답 DTO
-     */
-    @Builder
-    @Getter
-    static class ReservationResponse {
-        private Date date;
-        private List<ReservationTimeStatus> reservationTimeStatus;
-    }
-
-    /**
-     * 넘겨줄 날짜 형식
-     */
-    @Builder
-    @Getter
-    static class Date{
-        private int year;
-        private int month;
-        private int day;
-    }
-
-    /**
-     * 시간별 예약 가능 여부
-     */
-    @Builder
-    @Getter
-    static class ReservationTimeStatus {
-        private Integer start;
-        private Integer end;
         private boolean reservationStatus;
     }
 
