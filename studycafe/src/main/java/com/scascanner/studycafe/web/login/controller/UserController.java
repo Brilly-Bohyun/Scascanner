@@ -2,6 +2,7 @@ package com.scascanner.studycafe.web.login.controller;
 
 import com.scascanner.studycafe.web.login.dto.UserForm;
 import com.scascanner.studycafe.web.login.dto.UserLogIn;
+import com.scascanner.studycafe.web.login.security.token.Token;
 import com.scascanner.studycafe.web.login.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,7 +57,7 @@ public class UserController {
             return "login/loginForm";
         }
 
-        String loginUser = userService.longIn(userLogIn);
+        Token loginUser = userService.longIn(userLogIn);
 
         if(loginUser == null){
             bindingResult.reject("loginFail", "아이디 또는 비밀번호가 일치하지 않습니다.");

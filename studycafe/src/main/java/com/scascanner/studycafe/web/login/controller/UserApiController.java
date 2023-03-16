@@ -5,6 +5,7 @@ import com.scascanner.studycafe.web.login.dto.UserForm;
 import com.scascanner.studycafe.web.login.dto.UserInfoDto;
 import com.scascanner.studycafe.web.login.dto.UserLogIn;
 import com.scascanner.studycafe.web.login.exception.UserNotFoundException;
+import com.scascanner.studycafe.web.login.security.token.Token;
 import com.scascanner.studycafe.web.login.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -47,7 +48,7 @@ public class UserApiController {
 
     @PostMapping("/api/login")
     public ResponseEntity<?> login(@RequestBody UserLogIn userLogIn){
-        String userToken = userService.longIn(userLogIn);
+        Token userToken = userService.longIn(userLogIn);
 
         return ResponseEntity.ok().body("UserLogin Succeeded, userToken is" + userToken);
     }

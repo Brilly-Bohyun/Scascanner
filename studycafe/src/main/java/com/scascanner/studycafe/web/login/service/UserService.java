@@ -7,6 +7,7 @@ import com.scascanner.studycafe.web.login.dto.UserLogIn;
 import com.scascanner.studycafe.web.login.exception.UnMatchedPasswordException;
 import com.scascanner.studycafe.web.login.exception.UserNotFoundException;
 import com.scascanner.studycafe.web.login.security.token.JwtTokenProvider;
+import com.scascanner.studycafe.web.login.security.token.Token;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -46,7 +47,7 @@ public class UserService {
     }
 
     @Transactional
-    public String longIn(UserLogIn userLogIn){
+    public Token longIn(UserLogIn userLogIn){
         User user = findByUserId(userLogIn.getEmail());
         checkPassword(userLogIn.getPassword(), user.getPassword());
         return jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
