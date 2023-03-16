@@ -2,7 +2,6 @@ package com.scascanner.studycafe.web.reservation.service;
 
 import com.scascanner.studycafe.domain.entity.reservation.Reservation;
 import com.scascanner.studycafe.domain.repository.ReservationRepository;
-import com.scascanner.studycafe.domain.repository.StudyCafeRepository;
 import com.scascanner.studycafe.web.studycafe.service.StudyCafeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,7 +31,7 @@ public class ReservationService {
             reservationTimes.put(i, true);
         }
 
-        List<Object[]> allPossibleReservation = reservationRepository.findAllImpossibleReservation(targetDate, studyCafeId, roomId);
+        List<Object[]> allPossibleReservation = reservationRepository.findAllReservedTime(targetDate, studyCafeId, roomId);
         for (Object[] localDateTimes : allPossibleReservation) {
             for (int i = ((Time) localDateTimes[0]).toLocalTime().getHour(); i < ((Time) localDateTimes[1]).toLocalTime().getHour(); i++) {
                 reservationTimes.put(i, false);
