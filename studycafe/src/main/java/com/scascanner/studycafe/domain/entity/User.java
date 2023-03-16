@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,13 +35,15 @@ public class User implements UserDetails {
     private String name;
     private LocalDate birthday;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
     @Builder.Default
-    private List<String> roles = new ArrayList<>();
+    private Role roles = Role.USER;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+        ArrayList<GrantedAuthority> auth = new ArrayList<GrantedAuthority>();
+        auth.add(new SimpleGrantedAuthority(roles.toString()));
+        return auth;
     }
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -88,7 +91,7 @@ public class User implements UserDetails {
     }
 
     @Builder
-    public User(String email, String password, String nickname, String name, LocalDate birthday,List<String> roles) {
+    public User(String email, String password, String nickname, String name, LocalDate birthday,Role roles) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
@@ -96,6 +99,4 @@ public class User implements UserDetails {
         this.birthday = birthday;
         this.roles = roles;
     }
-
-
 }
