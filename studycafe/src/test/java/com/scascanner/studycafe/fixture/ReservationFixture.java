@@ -10,24 +10,27 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import static com.scascanner.studycafe.domain.entity.reservation.Reservation.*;
-import static com.scascanner.studycafe.fixture.RoomFixture.FOUR_TIMEU;
-import static com.scascanner.studycafe.fixture.RoomFixture.SIX_AEGIS;
-import static com.scascanner.studycafe.fixture.StudyCafeFixture.AEGIS;
-import static com.scascanner.studycafe.fixture.StudyCafeFixture.TIMEU;
+import static com.scascanner.studycafe.domain.entity.reservation.ReservationStatus.CANCELED;
+import static com.scascanner.studycafe.domain.entity.reservation.ReservationStatus.RESERVED;
+
 
 public enum ReservationFixture {
 
-    RESERVATION_TIMEU_FOUR(TIMEU.생성(), FOUR_TIMEU.생성(), LocalDate.now()),
-    RESERVATION_AEGIS_SIX(AEGIS.생성(), SIX_AEGIS.생성(), LocalDate.now());
+    RESERVATION_RESERVED_13(LocalDate.now(), LocalTime.of(13, 0), LocalTime.of(15, 0), RESERVED),
+    RESERVATION_RESERVED_15(LocalDate.now(), LocalTime.of(15, 0), LocalTime.of(18, 0), RESERVED),
+    RESERVATION_CANCELED_19(LocalDate.now(), LocalTime.of(19, 0), LocalTime.of(23, 0), CANCELED),
+    ;
 
-    private final StudyCafe studyCafe;
-    private final Room room;
     private final LocalDate reservationDate;
+    private final LocalTime startTime;
+    private final LocalTime endTime;
+    private final ReservationStatus reservationStatus;
 
-    ReservationFixture(StudyCafe studyCafe, Room room, LocalDate reservationDate) {
-        this.studyCafe = studyCafe;
-        this.room = room;
+    ReservationFixture(LocalDate reservationDate, LocalTime startTime, LocalTime endTime, ReservationStatus reservationStatus) {
         this.reservationDate = reservationDate;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.reservationStatus = reservationStatus;
     }
 
     public Reservation 생성() {
@@ -36,19 +39,22 @@ public enum ReservationFixture {
 
     private ReservationBuilder 기본_정보_생성() {
         return Reservation.builder()
-                .studyCafe(this.studyCafe)
-                .room(this.room)
+                .startTime(this.startTime)
+                .endTime(this.endTime)
+                .reservationStatus(this.reservationStatus)
                 .date(reservationDate);
     }
 
-    public Reservation 사용자_예약상태_시간_생성(ReservationStatus reservationStatus, User user, LocalTime startTime, LocalTime endTime) {
+    public Reservation 사용자_예약_생성(User user) {
         return 기본_정보_생성()
-                .reservationStatus(reservationStatus)
                 .user(user)
-                .startTime(startTime)
-                .endTime(endTime)
                 .build();
     }
 
-    
+    public Reservation 스터디카페_룸_생성(StudyCafe studyCafe, Room room) {
+        return 기본_정보_생성()
+                .studyCafe(studyCafe)
+                .room(room)
+                .build();
+    }
 }
