@@ -19,7 +19,7 @@ public class ReservationRepository {
     public EntityManager em;
 
     //날짜가 주어졌을 때 예약이 안되는 시간대를 반환
-    public List<Object[]> findAllImpossibleReservation(LocalDate targetDate, Long studyCafeId, Long roomId) {
+    public List<Object[]> findAllReservedTime(LocalDate targetDate, Long studyCafeId, Long roomId) {
 
         return em.createQuery("select r.startTime, r.endTime from Reservation r where r.date = :date and r.studyCafe.id = :studyCafeId and r.room.id = :roomId and r.reservationStatus = :status")
                 .setParameter("date", targetDate)
