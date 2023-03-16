@@ -10,9 +10,9 @@ public enum StudyCafeFixture {
     AEGIS("이지스스터디카페", LocalTime.of(0, 0), LocalTime.of(23, 0)),
     TIMEU("타임유스터디카페", LocalTime.of(10, 0), LocalTime.of(23, 0));
 
-    private String name;
-    private LocalTime openTime;
-    private LocalTime closeTime;
+    private final String name;
+    private final LocalTime openTime;
+    private final LocalTime closeTime;
 
     StudyCafeFixture(String name, LocalTime openTime, LocalTime closeTime) {
         this.name = name;
