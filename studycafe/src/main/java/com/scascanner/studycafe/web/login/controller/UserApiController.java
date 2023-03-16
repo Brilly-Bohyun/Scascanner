@@ -6,6 +6,8 @@ import com.scascanner.studycafe.web.login.dto.UserInfoDto;
 import com.scascanner.studycafe.web.login.dto.UserLogIn;
 import com.scascanner.studycafe.web.login.exception.UserNotFoundException;
 import com.scascanner.studycafe.web.login.service.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
 
+@Api(tags = {"1. User"})
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
@@ -24,11 +27,13 @@ public class UserApiController {
 
     private final UserService userService;
 
+    @ApiOperation(value = "회원 조회", notes = "모든 회원을 조회한다")
     @GetMapping
     public List<User> findAllUser(){
         return userService.findAllUsers();
     }
 
+    @ApiOperation(value = "회원 저장", notes = "회원 가입을 한다")
     @PostMapping
     public ResponseEntity<UserSavedDto> saveUser(@RequestBody @Valid UserForm userForm){
         Long id = userService.join(userForm);
