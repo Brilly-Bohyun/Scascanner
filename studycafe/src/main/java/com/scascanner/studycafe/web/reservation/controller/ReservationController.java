@@ -48,8 +48,8 @@ public class ReservationController {
     private final UserService userService;
     private final RoomService roomService;
 
-    @GetMapping("/{studyCafeId}/{roomId}")//date가 2023-02-11의 형태로 올 경우
-    public ReservationTimeStatusResponse impossibleReservationTimeList(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
+    @GetMapping("/{studyCafeId}/{roomId}/day")//date가 2023-02-11의 형태로 올 경우
+    public ReservationTimeStatusResponse reservationStatusPerDay(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
                                                                        @PathVariable Long studyCafeId,
                                                                        @PathVariable Long roomId) {
 
@@ -100,7 +100,7 @@ public class ReservationController {
         return new ResponseEntity<>(httpHeaders, HttpStatus.MOVED_PERMANENTLY); // "/"으로 redirect , 후에 예약 상세페이지를 만들면 예약 상세 페이지로 redirect하는 것으로 변경 !
     }
 
-    @GetMapping("/{studyCafeId}/{roomId}")
+    @GetMapping("/{studyCafeId}/{roomId}/month")
     public MonthReservationResponse reservationStatusPerMonth(@PathVariable Long studyCafeId, @PathVariable Long roomId, @RequestParam @DateTimeFormat(pattern = "yyyy-MM") LocalDate date) {
         Map<Integer, Boolean> reservationTimeStatusPerMonth = reservationService.reservationTimeStatusPerMonth(date.getYear(), date.getMonthValue(), studyCafeId, roomId);
         List<DayReservationStatus> dayReservationStatuses = new ArrayList<>();
