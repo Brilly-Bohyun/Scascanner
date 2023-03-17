@@ -47,10 +47,10 @@ public class UserService {
     }
 
     @Transactional
-    public Token longIn(UserLogIn userLogIn){
+    public User longIn(UserLogIn userLogIn){
         User user = findByUserId(userLogIn.getEmail());
         checkPassword(userLogIn.getPassword(), user.getPassword());
-        return jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
+        return user;
     }
 
     @Transactional

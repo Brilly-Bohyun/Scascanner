@@ -17,17 +17,6 @@ public class JwtService {
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    @Transactional
-    public void login(Token tokenDto){
-        RefreshToken refreshToken = RefreshToken.builder().keyEmail(tokenDto.getKey()).refreshToken(tokenDto.getRefreshToken()).build();
-        String loginUserEmail = refreshToken.getKeyEmail();
-        if(refreshTokenRepository.exsistsByKeyEmail(loginUserEmail)){
-            log.info("기존의 존재하는 refresh 토큰 삭제");
-            refreshTokenRepository.deleteByKeyEmail(loginUserEmail);
-        }
-        refreshTokenRepository.save(refreshToken);
-    }
-
     public Optional<RefreshToken> getRefreshToken(String refreshToken){
         return refreshTokenRepository.findByRefreshToken(refreshToken);
     }

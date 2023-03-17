@@ -1,6 +1,7 @@
 package com.scascanner.studycafe.web.login.security.token;
 
 import com.scascanner.studycafe.domain.entity.Role;
+import com.scascanner.studycafe.domain.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -24,6 +26,8 @@ public class JwtTokenProvider {
 
     private String secretKey;
     private String refreshSecretKey;
+    private final UserRepository userRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     // 토큰 유효 시간 1시간
     private Long accessTokenValidTime = 60 * 60 * 1000L; // 1시간
@@ -38,30 +42,29 @@ public class JwtTokenProvider {
     }
 
     //JWT 토큰 생성
-    public Token createToken(String user, Role roles){
+    public String createToken(String user, Role roles, long tokenValid){
         // JWT payload에 저장되는 정보 단위
         Claims claims = Jwts.claims().setSubject(user);
         // 정보는 key / value 쌍으로 저장됨
         claims.put("roles", roles);
         Date now = new Date();
 
-        //Access Token
-        String accessToken = Jwts.builder()
-                   .setClaims(claims) // 정보 저장
-                   .setIssuedAt(now) // 토큰 발행 시간 정보
-                   .setExpiration(new Date(now.getTime() + accessTokenValidTime)) // 토큰 유효 기간 설정
-                    .signWith(SignatureAlgorithm.HS256, secretKey) // 사용할 암호화 알고리즘과 signature에 들어갈 secret값 세팅
-                    .compact();
+        return Jwts.builder()
+                .setClaims(claims) // 발행 유저 정보 저장
+                .setIssuedAt(now) // 발행 시간 저장
+                .setExpiration(new Date(now.getTime() + tokenValid)) // 토큰 유효 시간
+                .signWith(SignatureAlgorithm.HS256, secretKey) //해싱 알고리즘 및 키 설정
+                .compact(); //생성
+    }
 
-        // Refresh Token
-        String refreshToken = Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + refreshTokenValidTime))
-                .signWith(SignatureAlgorithm.HS256, refreshSecretKey)
-                .compact();
+    // Access Token 생성
+    public String createAccessToken(String email, Role roles){
+        return this.createToken(email, roles, accessTokenValidTime);
+    }
 
-        return Token.builder().accessToken(accessToken).refreshToken(refreshToken).key(user).build();
+    // Refresh Token 생성
+    public String createRefreshToken(String email, Role roles){
+        return this.createToken(email, roles, refreshTokenValidTime);
     }
 
     // JWT 토큰으로 인증 정보 조회
@@ -75,9 +78,30 @@ public class JwtTokenProvider {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }
 
-    // Request의 Header에서 token 값을 가져온다 "X-AUTH-TOKEN" : "TOKEN값"
-    public String resolveToken(HttpServletRequest request){
-        return request.getHeader("X-AUTH-TOKEN");
+    // Email로 권한 정보 추출
+    public Role getRoles(String email){
+        return userRepository.findByUserId(email).get().getRoles();
+    }
+
+    // RefreshToken 존재유무 확인
+    public boolean existsRefreshToken(String refreshToken){
+        return refreshTokenRepository.existsByRefreshToken(refreshToken);
+    }
+
+    // Request의 Header에서 token 값을 가져온다 "authorization" : "TOKEN값"
+    public String resolveAccessToken(HttpServletRequest request){
+        if(request.getHeader("authorization") != null){
+            return request.getHeader("authorization").substring(7);
+        }
+        return null;
+    }
+
+    // Request의 Header에서 RefreshToken 값을 가져온다. "refreshToken" : "TOKEN값"
+    public String resolveRefreshToken(HttpServletRequest request){
+        if(request.getHeader("refreshToken") != null){
+            return request.getHeader("refreshToken").substring(7);
+        }
+        return null;
     }
 
     // 토큰의 유효성 + 만료일자 확인
@@ -106,6 +130,16 @@ public class JwtTokenProvider {
             return null;
         }
         return null;
+    }
+
+    // 에세스 토큰 헤더 설정
+    public void setHeaderAccessToken(HttpServletResponse response, String accessToken){
+        response.setHeader("authorization", "bearer " + accessToken);
+    }
+
+    // 리프레시 토큰 헤더 설정
+    public void setHeaderRefreshToken(HttpServletResponse response ,String refreshToken){
+        response.setHeader("refreshToken", "bearer " + refreshToken);
     }
 
     private String recreationAccessToken(String user, Object roles) {

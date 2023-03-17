@@ -5,7 +5,9 @@ import com.scascanner.studycafe.web.login.dto.UserForm;
 import com.scascanner.studycafe.web.login.dto.UserInfoDto;
 import com.scascanner.studycafe.web.login.dto.UserLogIn;
 import com.scascanner.studycafe.web.login.exception.UserNotFoundException;
-import com.scascanner.studycafe.web.login.security.token.Token;
+import com.scascanner.studycafe.web.login.security.token.JwtTokenProvider;
+import com.scascanner.studycafe.web.login.security.token.RefreshToken;
+import com.scascanner.studycafe.web.login.security.token.RefreshTokenRepository;
 import com.scascanner.studycafe.web.login.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -16,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
@@ -27,6 +30,8 @@ import java.util.List;
 public class UserApiController {
 
     private final UserService userService;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @ApiOperation(value = "회원 조회", notes = "모든 회원을 조회한다")
     @GetMapping
@@ -48,10 +53,19 @@ public class UserApiController {
 
     @ApiOperation(value = "로그인", notes = "이메일과 비밀번호를 입력하여 로그인을 한다")
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserLogIn userLogIn){
-        Token userToken = userService.longIn(userLogIn);
+    public ResponseEntity<?> login(@RequestBody UserLogIn userLogIn, HttpServletResponse response){
+        User user = userService.longIn(userLogIn);
 
-        return ResponseEntity.ok().body("UserLogin Succeeded, userToken is" + userToken);
+        // 토큰 발급 및 헤더 설정
+        String accessToken = jwtTokenProvider.createAccessToken(user.getEmail(), user.getRoles());
+        String refreshToken = jwtTokenProvider.createRefreshToken(user.getEmail(), user.getRoles());
+        jwtTokenProvider.setHeaderAccessToken(response, accessToken);
+        jwtTokenProvider.setHeaderRefreshToken(response, refreshToken);
+
+        //리프레시 토큰 저장소에 저장
+        refreshTokenRepository.save(new RefreshToken(refreshToken));
+
+        return ResponseEntity.ok().body("로그인 성공!");
     }
 
     @ApiOperation(value = "회원 정보 수정", notes = "바뀐 정보를 입력하여 정보를 수정한다")
