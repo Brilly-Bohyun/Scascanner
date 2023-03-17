@@ -26,14 +26,14 @@ public class ReservationService {
     private Map<Integer, Boolean> reservationTimes = new ConcurrentHashMap<>();
 
     public Map<Integer, Boolean> reservationTimeStatus(LocalDate targetDate, Long studyCafeId, Long roomId) {
-        Map<String, LocalTime> operationTime = studyCafeService.findStudyCafeOperationTime(studyCafeId);
+        Map<String, LocalTime> operationTime = studyCafeService.findOperationTime(studyCafeId);
         for (int i = operationTime.get("openTime").getHour(); i < operationTime.get("closeTime").getHour(); i++) {
             reservationTimes.put(i, true);
         }
 
         List<Object[]> allPossibleReservation = reservationRepository.findAllReservedTime(targetDate, studyCafeId, roomId);
         for (Object[] localDateTimes : allPossibleReservation) {
-            for (int i = ((Time) localDateTimes[0]).toLocalTime().getHour(); i < ((Time) localDateTimes[1]).toLocalTime().getHour(); i++) {
+            for (int i = ((LocalTime) localDateTimes[0]).getHour(); i < ((LocalTime) localDateTimes[1]).getHour(); i++) {
                 reservationTimes.put(i, false);
             }
         }
