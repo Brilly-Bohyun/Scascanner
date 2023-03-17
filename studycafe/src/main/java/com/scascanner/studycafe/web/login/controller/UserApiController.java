@@ -46,6 +46,7 @@ public class UserApiController {
         return new ResponseEntity<>(userSavedDto, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "로그인", notes = "이메일과 비밀번호를 입력하여 로그인을 한다")
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserLogIn userLogIn){
         Token userToken = userService.longIn(userLogIn);
@@ -53,6 +54,7 @@ public class UserApiController {
         return ResponseEntity.ok().body("UserLogin Succeeded, userToken is" + userToken);
     }
 
+    @ApiOperation(value = "회원 정보 수정", notes = "바뀐 정보를 입력하여 정보를 수정한다")
     @PatchMapping("/{id}")
     public ResponseEntity<UserInfoDto> partialUpdate(@PathVariable Long id, @RequestBody @Valid UserForm userForm){
         Long updatedId = userService.partialUpdate(id, userForm);
@@ -61,6 +63,7 @@ public class UserApiController {
         return new ResponseEntity<>(updatedUserInfoDto, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "회원 탈퇴", notes = "회원 탈퇴를 합니다.")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id){
         User user = userService.deleteById(id);
