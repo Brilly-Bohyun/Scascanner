@@ -1,8 +1,7 @@
 package com.scascanner.studycafe.web.login.controller;
 
 import com.scascanner.studycafe.domain.entity.User;
-import com.scascanner.studycafe.web.login.dto.UserForm;
-import com.scascanner.studycafe.web.login.dto.UserInfoDto;
+import com.scascanner.studycafe.web.login.dto.UserInfoRequest;
 import com.scascanner.studycafe.web.login.dto.UserLogIn;
 import com.scascanner.studycafe.web.login.exception.UserNotFoundException;
 import com.scascanner.studycafe.web.login.security.token.JwtTokenProvider;
@@ -10,6 +9,7 @@ import com.scascanner.studycafe.web.login.security.token.RefreshToken;
 import com.scascanner.studycafe.web.login.security.token.RefreshTokenRepository;
 import com.scascanner.studycafe.web.login.service.UserService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.Builder;
 import lombok.Getter;
@@ -41,14 +41,14 @@ public class UserApiController {
 
     @ApiOperation(value = "회원 저장", notes = "회원 가입을 한다")
     @PostMapping
-    public ResponseEntity<UserSavedDto> saveUser(@RequestBody @Valid UserForm userForm){
+    public ResponseEntity<UserSavedResponse> saveUser(@RequestBody @Valid UserInfoRequest userForm){
         Long id = userService.join(userForm);
-        UserSavedDto userSavedDto = UserSavedDto.builder()
+        UserSavedResponse userSavedResponseDto = UserSavedResponse.builder()
                 .id(id)
                 .name(userForm.getName())
                 .joinDate(new Date()).build();
 
-        return new ResponseEntity<>(userSavedDto, HttpStatus.OK);
+        return new ResponseEntity<>(userSavedResponseDto, HttpStatus.OK);
     }
 
     @ApiOperation(value = "로그인", notes = "이메일과 비밀번호를 입력하여 로그인을 한다")
@@ -70,14 +70,15 @@ public class UserApiController {
 
     @ApiOperation(value = "회원 정보 수정", notes = "바뀐 정보를 입력하여 정보를 수정한다")
     @PatchMapping("/{id}")
-    public ResponseEntity<UserInfoDto> partialUpdate(@PathVariable Long id, @RequestBody @Valid UserForm userForm){
+    public ResponseEntity<UserInfoRequest> partialUpdate(@PathVariable Long id, @RequestBody @Valid UserInfoRequest userForm){
         Long updatedId = userService.partialUpdate(id, userForm);
-        UserInfoDto updatedUserInfoDto = getUserInfoDto(id, userForm);
+        UserInfoRequest updatedUserInfoRequest = getUserInfoDto(id, userForm);
 
-        return new ResponseEntity<>(updatedUserInfoDto, HttpStatus.OK);
+        return new ResponseEntity<>(updatedUserInfoRequest, HttpStatus.OK);
     }
 
     @ApiOperation(value = "회원 탈퇴", notes = "회원 탈퇴를 합니다.")
+    @ApiImplicitParam(name = "id", value = "사용자 고유 아이디", required = true, dataType = "Long", paramType = "path", defaultValue = "None")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id){
         User user = userService.deleteById(id);
@@ -89,8 +90,8 @@ public class UserApiController {
         return ResponseEntity.ok().body("Delete Success");
     }
 
-    private UserInfoDto getUserInfoDto(Long id, UserForm userForm) {
-        UserInfoDto updatedUserInfoDto = UserInfoDto.builder()
+    private UserInfoRequest getUserInfoDto(Long id, UserInfoRequest userForm) {
+        UserInfoRequest updatedUserInfoRequest = UserInfoRequest.builder()
                 .id(id)
                 .email(userForm.getEmail())
                 .password(userForm.getPassword())
@@ -98,7 +99,7 @@ public class UserApiController {
                 .name(userForm.getName())
                 .birthday(userForm.getBirthday())
                 .build();
-        return updatedUserInfoDto;
+        return updatedUserInfoRequest;
     }
 
     /**
@@ -106,7 +107,7 @@ public class UserApiController {
      */
     @Builder
     @Getter
-    static class UserSavedDto{
+    static class UserSavedResponse {
         private Long id;
         private String name;
         private Date joinDate;

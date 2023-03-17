@@ -36,7 +36,7 @@ public class OwnerApiController {
     }
 
     @ApiOperation(value = "오너 로그인", notes = "이메일과 비밀번호를 입력하여 로그인을 한다")
-    @PostMapping("/api/login")
+    @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody OwnerLogIn ownerLogIn){
         Owner owner = ownerService.longIn(ownerLogIn);
 

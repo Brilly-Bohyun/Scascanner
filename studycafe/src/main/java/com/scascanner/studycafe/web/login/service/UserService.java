@@ -2,12 +2,11 @@ package com.scascanner.studycafe.web.login.service;
 
 import com.scascanner.studycafe.domain.entity.User;
 import com.scascanner.studycafe.domain.repository.UserRepository;
-import com.scascanner.studycafe.web.login.dto.UserForm;
+import com.scascanner.studycafe.web.login.dto.UserInfoRequest;
 import com.scascanner.studycafe.web.login.dto.UserLogIn;
 import com.scascanner.studycafe.web.login.exception.UnMatchedPasswordException;
 import com.scascanner.studycafe.web.login.exception.UserNotFoundException;
 import com.scascanner.studycafe.web.login.security.token.JwtTokenProvider;
-import com.scascanner.studycafe.web.login.security.token.Token;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,8 +25,8 @@ public class UserService {
     private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
-    public Long join(UserForm userForm){
-        User user = userForm.toEntity();
+    public Long join(UserInfoRequest userInfoRequest){
+        User user = userInfoRequest.toEntity();
         userRepository.save(user);
         return user.getId();
     }
@@ -54,7 +53,7 @@ public class UserService {
     }
 
     @Transactional
-    public Long partialUpdate(Long id, UserForm userForm){
+    public Long partialUpdate(Long id, UserInfoRequest userForm){
         User user = userRepository.findById(id).get();
         userRepository.save(user);
         return user.getId();
