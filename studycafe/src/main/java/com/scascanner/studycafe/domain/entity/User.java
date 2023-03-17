@@ -13,6 +13,7 @@ import java.time.LocalDate;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 public class User {
 
     @Id
@@ -34,8 +35,17 @@ public class User {
         return password;
     }
 
-    @Builder
+
     public User(String email, String password, String nickname, String name, LocalDate birthday) {
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.name = name;
+        this.birthday = birthday;
+    }
+
+    public User(Long id, String email, String password, String nickname, String name, LocalDate birthday) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.nickname = nickname;
