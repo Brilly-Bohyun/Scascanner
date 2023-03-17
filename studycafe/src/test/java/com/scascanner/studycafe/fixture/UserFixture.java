@@ -37,4 +37,11 @@ public enum UserFixture {
     public User 생성() {
         return 기본_정보_생성().build();
     }
+
+    public User 생성(Long id) {
+        return 기본_정보_생성()
+                .id(id)
+                .build();
+    }
+
 }
