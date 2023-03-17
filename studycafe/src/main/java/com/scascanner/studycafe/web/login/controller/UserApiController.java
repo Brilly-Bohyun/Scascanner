@@ -46,7 +46,7 @@ public class UserApiController {
         return new ResponseEntity<>(userSavedDto, HttpStatus.OK);
     }
 
-    @PostMapping("/api/login")
+    @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserLogIn userLogIn){
         Token userToken = userService.longIn(userLogIn);
 
