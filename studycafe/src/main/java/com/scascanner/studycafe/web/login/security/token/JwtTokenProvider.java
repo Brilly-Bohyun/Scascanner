@@ -18,13 +18,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Base64;
 import java.util.Date;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Component
 public class JwtTokenProvider {
 
-    private String secretKey;
+    private String secretKey = "secret";
     private String refreshSecretKey;
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -80,7 +79,7 @@ public class JwtTokenProvider {
 
     // Email로 권한 정보 추출
     public Role getRoles(String email){
-        return userRepository.findByUserId(email).get().getRoles();
+        return userRepository.findByEmail(email).get().getRoles();
     }
 
     // RefreshToken 존재유무 확인

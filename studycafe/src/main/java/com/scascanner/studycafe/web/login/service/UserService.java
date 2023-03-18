@@ -41,7 +41,7 @@ public class UserService {
     }
 
     public User findByUserId(String email){
-        return userRepository.findByUserId(email)
+        return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException(String.format("There is no email : %s, You need to SignUp", email)));
     }
 

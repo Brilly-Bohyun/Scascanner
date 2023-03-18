@@ -1,5 +1,6 @@
 package com.scascanner.studycafe.web.login.security.token;
 
+import com.scascanner.studycafe.domain.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,4 +21,8 @@ public class RefreshToken {
     @Id
     @Column(name = "REFRESH_TOKEN_ID", nullable = false)
     private String refreshToken;
+
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }

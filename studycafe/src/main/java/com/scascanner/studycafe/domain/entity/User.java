@@ -17,6 +17,7 @@ import java.util.Collection;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 public class User implements UserDetails {
 
     @Id
@@ -33,7 +34,6 @@ public class User implements UserDetails {
     private LocalDate birthday;
 
     @Enumerated(EnumType.STRING)
-    @Builder.Default
     private Role roles = Role.USER;
 
     @Override
@@ -87,8 +87,17 @@ public class User implements UserDetails {
         return true;
     }
 
-    @Builder
     public User(String email, String password, String nickname, String name, LocalDate birthday,Role roles) {
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.name = name;
+        this.birthday = birthday;
+        this.roles = roles;
+    }
+
+    public User(Long id, String email, String password, String nickname, String name, LocalDate birthday, Role roles) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.nickname = nickname;

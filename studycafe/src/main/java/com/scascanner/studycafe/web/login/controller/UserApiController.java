@@ -63,7 +63,7 @@ public class UserApiController {
         jwtTokenProvider.setHeaderRefreshToken(response, refreshToken);
 
         //리프레시 토큰 저장소에 저장
-        refreshTokenRepository.save(new RefreshToken(refreshToken));
+        refreshTokenRepository.save(new RefreshToken(refreshToken, user));
 
         return ResponseEntity.ok().body("로그인 성공!");
     }

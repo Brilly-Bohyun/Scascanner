@@ -49,14 +49,18 @@ public class UserInfoRequest {
     @Past
     private LocalDate birthday;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Role roles = Role.USER;
+
     @Builder
-    public UserInfoRequest(Long id, String email, String password, String nickname, String name, LocalDate birthday) {
+    public UserInfoRequest(Long id, String email, String password, String nickname, String name, LocalDate birthday, Role roles) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.name = name;
         this.birthday = birthday;
+        this.roles = roles;
     }
 
     public User toEntity(){
