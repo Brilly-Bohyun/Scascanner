@@ -4,6 +4,7 @@ import com.scascanner.studycafe.domain.entity.Room;
 import com.scascanner.studycafe.domain.entity.StudyCafe;
 import com.scascanner.studycafe.domain.entity.User;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import javax.persistence.Column;
@@ -12,6 +13,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -24,7 +26,7 @@ import java.time.LocalTime;
 public class Reservation {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reservation_id")
     private Long id;
 
@@ -47,6 +49,7 @@ public class Reservation {
     @Enumerated(value = EnumType.STRING)
     private ReservationStatus reservationStatus;
 
+    @Builder
     public Reservation(StudyCafe studyCafe, User user, Room room, LocalDate date, LocalTime startTime, LocalTime endTime, ReservationStatus reservationStatus) {
         this.studyCafe = studyCafe;
         this.user = user;
@@ -55,5 +58,9 @@ public class Reservation {
         this.startTime = startTime;
         this.endTime = endTime;
         this.reservationStatus = reservationStatus;
+    }
+
+    public void cancel(){
+        this.reservationStatus = ReservationStatus.CANCELED;
     }
 }

@@ -22,7 +22,7 @@ public class StudyCafeService {
     private final StudyCafeRepository studyCafeRepository;
     private Map<String, LocalTime> studyCafeOperationTime = new ConcurrentHashMap<>();
 
-    public Map<String, LocalTime> findStudyCafeOperationTime(Long studyCafeId) {
+    public Map<String, LocalTime> findOperationTime(Long studyCafeId) {
         List<Object[]> studyCafeOperationTimeList = studyCafeRepository.findStudyCafeOperationTime(studyCafeId);
         studyCafeOperationTime.put("openTime", (LocalTime) studyCafeOperationTimeList.get(0)[0]);
         studyCafeOperationTime.put("closeTime", (LocalTime) studyCafeOperationTimeList.get(0)[1]);

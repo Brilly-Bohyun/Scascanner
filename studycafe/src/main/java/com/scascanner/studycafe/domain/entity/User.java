@@ -2,7 +2,6 @@ package com.scascanner.studycafe.domain.entity;
 
 import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
@@ -14,7 +13,7 @@ import java.time.LocalDate;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
+@Builder
 public class User {
 
     @Id
@@ -28,8 +27,25 @@ public class User {
     private String name;
     private LocalDate birthday;
 
-    @Builder
+    public Long getId() {
+        return id;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+
     public User(String email, String password, String nickname, String name, LocalDate birthday) {
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.name = name;
+        this.birthday = birthday;
+    }
+
+    public User(Long id, String email, String password, String nickname, String name, LocalDate birthday) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.nickname = nickname;
