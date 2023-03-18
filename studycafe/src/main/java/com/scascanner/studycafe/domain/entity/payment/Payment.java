@@ -1,10 +1,12 @@
 package com.scascanner.studycafe.domain.entity.payment;
-import com.scascanner.studycafe.domain.entity.reservation.Reservation;
-import com.scascanner.studycafe.domain.entity.User;
 
+import com.scascanner.studycafe.domain.entity.reservation.Reservation;
+
+import com.scascanner.studycafe.web.pay.PaymentMethod;
 import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,36 +16,60 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "exchange_id")
+    @Column(name = "payment_id", nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(nullable = false)
+    private PaymentMethod method;
 
+    @Column(nullable = false)
+    private Integer amount;
+
+    @Column(nullable = false)
+    private String orderId;
+
+    @Column(nullable = false)
+    private String orderName;
+
+    private String customerEmail;
+    private String customerName;
+
+    /**
+     * 결제 금액, 구매자 관련 정보들을 Reservation에서 가져오도록 구현
+     */
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "reservation_id")
-    private Reservation reservation;
+    private Reservation reservation;    // 예약 id, 총 결제 금액을 여기서 가져오도록 설정
 
-    @Value("impKey")
-    private String impKey;
+    @Column(nullable = false)
+    private LocalDateTime createDate;    // 거래 생성 일자
 
-    @Value("impSecretKey")
-    private String impSecret;
+    @Column(nullable = false)
+    private String paymentKey;  // 추후 결제 취소 및 조회에 사용
 
-    private PaymentType paymentType;  // 결제 유형
-    private Integer money;    // 결제 금액
-    private LocalDateTime paymentDate;    // 거래 일자
-    private boolean isCompleted;    // 결제 완료 여부 (추후 열거체로 리펙토링)
+    private String paySuccessYn;
+    @Builder
+    public Payment(Long id, PaymentMethod method, Integer amount, String orderId, String orderName, String customerEmail, String customerName, Reservation reservation, LocalDateTime createDate, String  paySuccessYn) {
+        this.id = id;
+        this.method = method;
+        this.amount = amount;
+        this.orderId = orderId;
+        this.orderName = orderName;
+        this.customerEmail = customerEmail;
+        this.customerName = customerName;
+        this.reservation = reservation;
+        this.createDate = createDate;
+        this.paySuccessYn = paySuccessYn;
+    }
 }
