@@ -28,6 +28,7 @@ public class Room {
     @JoinColumn(name = "study_cafe_id")
     private StudyCafe studyCafe;
 
+    private String name;
     private Integer headCount;
     private Integer price;
 
@@ -37,9 +38,10 @@ public class Room {
     }
 
     @Builder
-    public Room(Long id, StudyCafe studyCafe, Integer headCount, Integer price) {
+    public Room(Long id, StudyCafe studyCafe, String name, Integer headCount, Integer price) {
         this.id = id;
         this.studyCafe = studyCafe;
+        this.name = name;
         this.headCount = headCount;
         this.price = price;
     }
