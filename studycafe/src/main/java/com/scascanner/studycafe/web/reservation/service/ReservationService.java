@@ -73,7 +73,7 @@ public class ReservationService {
         }
     }
 
-    public int getLastDay(int year, int month) {
+    private int getLastDay(int year, int month) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month - 1, 1);
         return calendar.getActualMaximum(Calendar.DATE);
