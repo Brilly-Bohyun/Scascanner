@@ -2,7 +2,13 @@ package com.scascanner.studycafe.web.reservation.controller;
 
 import com.scascanner.studycafe.domain.entity.reservation.Reservation;
 import com.scascanner.studycafe.domain.entity.reservation.ReservationStatus;
+import com.scascanner.studycafe.domain.entity.User;
 import com.scascanner.studycafe.web.login.service.UserService;
+import com.scascanner.studycafe.web.reservation.dto.DayReservationStatus;
+import com.scascanner.studycafe.web.reservation.dto.MonthReservationResponse;
+import com.scascanner.studycafe.web.reservation.dto.ReservationResponse;
+import com.scascanner.studycafe.web.reservation.dto.ReservationTimeStatus;
+import com.scascanner.studycafe.web.reservation.dto.ReservationTimeStatusResponse;
 import com.scascanner.studycafe.web.reservation.service.ReservationService;
 import com.scascanner.studycafe.web.studycafe.service.RoomService;
 import com.scascanner.studycafe.web.studycafe.service.StudyCafeService;
@@ -14,15 +20,14 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -31,10 +36,11 @@ import java.util.List;
 import java.util.Map;
 
 
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/reservation")
+@RequestMapping("/api/reservation")
 public class ReservationController {
 
     private final ReservationService reservationService;
@@ -42,51 +48,31 @@ public class ReservationController {
     private final UserService userService;
     private final RoomService roomService;
 
-    @GetMapping//date가 2023-02-11의 형태로 올 경우
-    public GetReservationResponse impossibleReservationTimeList(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
-                                                                @RequestParam Long studyCafeId,
-                                                                @RequestParam Long roomId) {
+    @GetMapping("/{studyCafeId}/{roomId}/day")//date가 2023-02-11의 형태로 올 경우
+    public ReservationTimeStatusResponse reservationStatusPerDay(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
+                                                                       @PathVariable Long studyCafeId,
+                                                                       @PathVariable Long roomId) {
 
-        Map<String, LocalTime> studyCafeOperationTime = studyCafeService.findStudyCafeOperationTime(studyCafeId);
-        Map<Integer, Boolean> reservationTimeStatus = reservationService.reservationTimeStatus(date, studyCafeOperationTime.get("openTime"),
-                studyCafeOperationTime.get("closeTime"),
-                studyCafeId, roomId);
+        Map<Integer, Boolean> reservationTimeStatus = reservationService.reservationTimeStatus(date, studyCafeId, roomId);
 
         List<ReservationTimeStatus> reservationTimeStatusList = new ArrayList<>();
+        reservationTimeStatus.entrySet().stream().
+                forEach(entry -> reservationTimeStatusList.add(ReservationTimeStatus.of(entry.getKey(), reservationTimeStatus.get(entry.getKey()))));
 
-        for (Integer key : reservationTimeStatus.keySet()) {
-            reservationTimeStatusList.add(
-                    ReservationTimeStatus.builder()
-                            .start(key)
-                            .end(key+1)
-                            .reservationStatus(reservationTimeStatus.get(key))
-                            .build());
-
-        }
-
-        Date targetDate = Date.builder()
-                .year(date.getYear())
-                .month(date.getMonthValue())
-                .day(date.getDayOfMonth())
-                .build();
-
-        return GetReservationResponse.builder()
-                .reservationTimeStatus(reservationTimeStatusList)
-                .date(targetDate)
-                .build();
+        return ReservationTimeStatusResponse.of(reservationTimeStatusList, date);
     }
 
-    @PostMapping
+    @PostMapping("/{studyCafeId}/{roomId}")
     public ResponseEntity<?> reserve(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
-                                     @RequestParam Long studyCafeId,
-                                     @RequestParam Long roomId,
+                                     @PathVariable Long studyCafeId,
+                                     @PathVariable Long roomId,
                                      @RequestParam @DateTimeFormat(pattern = "kk:mm:ss") LocalTime startTime,
                                      @RequestParam @DateTimeFormat(pattern = "kk:mm:ss") LocalTime endTime,
-                                     @CookieValue(name = "userId", required = true) Long userId) {
+                                     @SessionAttribute(name = "loginUser") User user) {
 
         Reservation reservation = new Reservation(
                 studyCafeService.findById(studyCafeId),
-                userService.findById(userId),
+                userService.findById(user.getId()),
                 roomService.findById(roomId),
                 date, startTime, endTime, ReservationStatus.RESERVED);
         reservationService.reserve(reservation);
@@ -97,64 +83,31 @@ public class ReservationController {
     }
 
     @GetMapping("/details")
-    public List<ReservationDto> userReservation(@CookieValue(name = "userId") Long userId) {
-        List<Reservation> reservations = reservationService.findByUserId(userId);
-        List<ReservationDto> reservationDtos = new ArrayList<>();
+    public List<ReservationResponse> userReservation(@SessionAttribute(name = "loginUser") User user) {
+        List<Reservation> reservations = reservationService.findByUserId(user.getId());
+        List<ReservationResponse> responses = new ArrayList<>();
         for (Reservation reservation : reservations) {
-            reservationDtos.add(
-                    ReservationDto.builder()
-                            .studyCafeName(reservation.getStudyCafe().getName())
-                            .roomHeadCount(reservation.getRoom().getHeadCount())
-                            .date(reservation.getDate())
-                            .startTime(reservation.getStartTime())
-                            .endTime(reservation.getEndTime())
-                            .reservationStatus(reservation.getReservationStatus())
-                            .build());
+            responses.add(ReservationResponse.from(reservation));
         }
-        return reservationDtos;
+        return responses;
     }
 
-    @Getter
-    @Builder
-    static class ReservationDto{
-        private String studyCafeName;
-        private Integer roomHeadCount;
-        private LocalDate date;
-        private LocalTime startTime;
-        private LocalTime endTime;
-        private ReservationStatus reservationStatus;
+    @PostMapping("/details/{reservationId}/cancel") //userId가 포함되어 있어야 하는가 .. ?
+    public ResponseEntity<?> cancelReservation(@PathVariable Long reservationId) {
+        reservationService.cancelReservation(reservationId);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setLocation(URI.create("/reservation/details"));
+        return new ResponseEntity<>(httpHeaders, HttpStatus.MOVED_PERMANENTLY); // "/"으로 redirect , 후에 예약 상세페이지를 만들면 예약 상세 페이지로 redirect하는 것으로 변경 !
     }
 
-    /**
-     * 예약 조회 응답 DTO
-     */
-    @Builder
-    @Getter
-    static class GetReservationResponse{
-        private Date date;
-        private List<ReservationTimeStatus> reservationTimeStatus;
+    @GetMapping("/{studyCafeId}/{roomId}/month")
+    public MonthReservationResponse reservationStatusPerMonth(@PathVariable Long studyCafeId, @PathVariable Long roomId, @RequestParam @DateTimeFormat(pattern = "yyyy-MM") LocalDate date) {
+        Map<Integer, Boolean> reservationTimeStatusPerMonth = reservationService.reservationTimeStatusPerMonth(date.getYear(), date.getMonthValue(), studyCafeId, roomId);
+        List<DayReservationStatus> dayReservationStatuses = new ArrayList<>();
+        reservationTimeStatusPerMonth.entrySet().stream()
+                .forEach(entry -> dayReservationStatuses.add(DayReservationStatus.of(entry.getKey(), reservationTimeStatusPerMonth.get(entry.getKey()))));
+        return MonthReservationResponse.of(date.getMonthValue(), dayReservationStatuses);
     }
 
-    /**
-     * 넘겨줄 날짜 형식
-     */
-    @Builder
-    @Getter
-    static class Date{
-        private int year;
-        private int month;
-        private int day;
-    }
-
-    /**
-     * 시간별 예약 가능 여부
-     */
-    @Builder
-    @Getter
-    static class ReservationTimeStatus {
-        private Integer start;
-        private Integer end;
-        private boolean reservationStatus;
-    }
 
 }
