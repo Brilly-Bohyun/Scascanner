@@ -1,0 +1,36 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="https://js.tosspayments.com/v1"></script>
+</head>
+<body>
+<section>
+  <!-- ... -->
+  <span>총 주문금액</span>
+  <span>35,000원</span>
+  <button id="payment-button">35,000원 결제하기</button>
+</section>
+<script>
+  var clientKey = 'test_ck_0Poxy1XQL8RgmqMKe7k37nO5Wmlg'
+  var tossPayments = TossPayments(clientKey)
+  var button = document.getElementById('payment-button') // 결제하기 버튼
+  button.addEventListener('click', function () {
+    tossPayments.requestPayment('계좌이체', {
+      amount: 35000,
+      orderId: 'a4CWyWY5m89PNh7xJwhk123123dasd1123dasd22333',
+      orderName: '스터디룸',
+      customerName: '김민우',
+      successUrl: 'http://localhost:8080/payment/success',
+      failUrl: 'http://localhost:8080/tosspaymentstest/fail',
+    })
+    .catch(function (error) {
+      if (error.code === 'USER_CANCEL') {
+        // 결제 고객이 결제창을 닫았을 때 에러 처리
+      } else if (error.code === 'INVALID_CARD_COMPANY') {
+        // 유효하지 않은 카드 코드에 대한 에러 처리
+      }
+    })
+  })
+</script>
+</body>
+</html>

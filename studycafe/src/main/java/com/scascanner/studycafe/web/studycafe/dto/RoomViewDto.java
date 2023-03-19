@@ -10,12 +10,14 @@ import lombok.Setter;
 public class RoomViewDto {
 
     private StudyCafeViewDto studyCafe;
+    private String name;
     private Integer headCount;
     private Integer price;
 
     @Builder
-    public RoomViewDto(StudyCafeViewDto studyCafeViewDto, Integer headCount, Integer price) {
+    public RoomViewDto(StudyCafeViewDto studyCafeViewDto, String name, Integer headCount, Integer price) {
         this.studyCafe = studyCafeViewDto;
+        this.name = name;
         this.headCount = headCount;
         this.price = price;
     }
@@ -24,6 +26,7 @@ public class RoomViewDto {
         return RoomViewDto.builder()
                 .studyCafeViewDto(StudyCafeViewDto.of(room.getStudyCafe()))
                 .headCount(room.getHeadCount())
+                .name(room.getName())
                 .price(room.getPrice())
                 .build();
     }

@@ -2,7 +2,6 @@ package com.scascanner.studycafe.web.studycafe.controller;
 
 import com.scascanner.studycafe.domain.entity.StudyCafe;
 import com.scascanner.studycafe.web.studycafe.service.StudyCafeService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +31,8 @@ class StudyCafeControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @BeforeEach
-    public void beforeEach() {
-
-    }
-
     @Test
-    @DisplayName("[API][GET] 스터디 카페 전체 조회")
+    @DisplayName("[URL][GET] 스터디 카페 전체 조회")
     public void 스터디_카페_전체_조회() throws Exception {
 
         // given
