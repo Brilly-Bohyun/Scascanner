@@ -6,8 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+// CommonPaymentCreateRequest 클래스로 대체
 @Data
-@NoArgsConstructor
 public class PaymentCreateResponse {
 
     private PaymentMethod method;
