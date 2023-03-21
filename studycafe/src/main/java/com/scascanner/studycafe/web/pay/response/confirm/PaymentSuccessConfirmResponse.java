@@ -1,16 +1,5 @@
 package com.scascanner.studycafe.web.pay.response.confirm;
 
-import com.scascanner.studycafe.web.pay.response.etc.Discount;
-import com.scascanner.studycafe.web.pay.response.etc.GiftCertificate;
-import com.scascanner.studycafe.web.pay.response.etc.MobilePhone;
-import com.scascanner.studycafe.web.pay.response.etc.Transfer;
-import com.scascanner.studycafe.web.pay.response.etc.Checkout;
-import com.scascanner.studycafe.web.pay.response.etc.EasyPay;
-import com.scascanner.studycafe.web.pay.response.etc.Failure;
-import com.scascanner.studycafe.web.pay.response.etc.Receipt;
-import com.scascanner.studycafe.web.pay.response.etc.card.Card;
-import com.scascanner.studycafe.web.pay.response.etc.cardreceipt.CashReceipt;
-import com.scascanner.studycafe.web.pay.response.etc.virtualaccount.VirtualAccount;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
